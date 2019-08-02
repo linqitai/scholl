@@ -1,0 +1,21 @@
+/* 搜索框组件 */
+/* @import "components/search/search.wxss"; */
+
+
+.form{
+  width: 100%;
+  height: auto;
+  margin-bottom: 140rpx;
+}
+.item{
+  padding: 12rpx 24rpx;
+  font-size: 30rpx;
+}
+.item .name{
+  padding-top: 12rpx;
+  font-size: 34rpx;
+}
+.item .department{
+  margin-top: 12rpx;
+  padding-bottom: 12rpx;
+}

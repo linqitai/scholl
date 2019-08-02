@@ -1,0 +1,74 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<scroll-view class="scroll" scroll-y="true">
+  <van-action-sheet show="{{ show }}" title="{{title}}" bind:close="onClose">
+    <view style='padding-left:24rpx;'>
+      <van-radio-group value="{{ radio }}" checked-color="#07c160" bind:change="onChange">
+        <van-radio wx:for="{{visitorList}}" wx:key="{{index}}" name="{{index}}" >
+          <view class="item">
+            <view class='name'>{{item.SName}} {{item.SSex}} {{item.SMPhone}}</view>
+            <view class='department'>{{item.SDDetailName}}</view>
+          </view>
+        </van-radio>
+      </van-radio-group>
+    </view>
+  </van-action-sheet>
+  <view class='form'>
+    <form bindsubmit="formSubmit" report-submit="true">
+      <view class='title'>被访人信息</view>
+      <van-cell-group>
+        <van-field value="{{form.SName}}" name="SName" label="姓名" bindblur="getStaffInfoByName" placeholder="被访人姓名" clearable border="{{ false }}"/>
+        <van-field value="{{form.SMPhone}}" name="SMPhone" label="手机号" bindblur="getStaffInfoByPhone" placeholder="被访人手机号" clearable border="{{ false }}"/>
+        
+        <van-field value="{{form.SDDetailName}}" name="SDDetailName" label="部门" placeholder="被访人部门" clearable border="{{ false }}"/>
+      </van-cell-group>
+      <!-- <view class='wings_blank mt-20'>
+        <button class='submit' type="primary" formType="submit" size='default'> 查 询 </button>
+      </view> -->
+      <view class='title'>访客信息</view>
+      <van-cell-group>
+        <van-field name="Name" label="访客姓名" placeholder="请输入您的姓名" clearable border="{{ false }}"/>
+        <picker name="Sex" value="{{form.Sex}}" range="{{sex_array}}" bindchange="bindSexPickerChange">
+          <view class="picker">
+            <label class='label'>访客性别</label><text class='text'>{{sex_array[form.Sex]}}</text>
+          </view>
+        </picker>
+        <van-field name="Phone" label="联系电话" placeholder="请输入您的手机号" border="{{ false }}" maxlength="{{maxlengthPhome}}"/>
+        <van-field name="IdentityNumber" label="身份证号" placeholder="请输入您的身份证号" clearable border="{{ false }}" maxlength="{{maxlengthIdentityNumber}}"/>
+        <picker name="Reason" value="{{form.Reason}}" range="{{reason_array}}" bindchange='bindReasonPickerChange'>
+          <view class="picker">
+            <label class='label'>来访事由</label><text class='text'>{{reason_array[form.Reason]}}</text>
+          </view>
+        </picker>
+        <picker name="Number" value="{{form.Number}}" range="{{number_array}}" bindchange='bindNumberPickerChange'>
+          <view class="picker">
+            <label class='label'>访客人数</label><text class='text'>{{number_array[form.Number]}}</text>
+          </view>
+        </picker>
+        <van-field name="PlateNumber" label="访客车牌" placeholder="请输入您的车牌号" clearable border="{{ false }}"/>
+        <van-field name="Unit" label="来访单位" placeholder="请输入您的单位" clearable border="{{ false }}"/>
+        <picker name="Date" mode="date" value="{{form.Date}}" start="2019-07-01" end="2027-07-01" bindchange="bindDateChange">
+          <view class="picker">
+            <label class='label'>来访日期</label><text class='text'>{{form.Date}}</text>
+          </view>
+        </picker>
+        <picker name="StartTime" mode="time" value="{{form.StartTime}}" start="00:00" end="12:59" bindchange="bindStartTimeChange">
+          <view class="picker">
+            <label class='label'>时间起点</label><text class='text'>{{form.StartTime}}</text>
+          </view>
+        </picker>
+        <picker name="EndTime" mode="time" value="{{form.EndTime}}" start="00:00" end="12:59" bindchange="bindEndTimeChange">
+          <view class="picker">
+            <label class='label'>时间终点</label><text class='text'>{{form.EndTime}}</text>
+          </view>
+        </picker>
+        <van-field name="Remark" label="备注说明" placeholder="备注信息" clearable border="{{ false }}"/>
+      </van-cell-group>
+      <view class='wings_blank mt-20'>
+        <button class='submit' type="primary" formType="submit" size='default'> 提 交 </button>
+      </view>
+    </form >
+  </view>
+</scroll-view>
+<!-- </view> -->
+<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>

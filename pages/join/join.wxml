@@ -1,0 +1,72 @@
+<scroll-view class='wrapper' scroll-y>
+  <view class='contentBox' wx:if="{{store_cert!=0}}">
+    <label class="inputBoxTextarea2 {{store_cert==1?'green':''}}">{{store_cert==1?'认证通过':'您的资料正在审核中'}}</label>
+  </view>
+  <view class='contentBox'>
+    <view class='inputBox'>
+      <label class='label'>商户名称:</label>
+      <input class='input' placeholder="输入框" placeholder-class="inputP" bindinput='getName' value='{{name}}' disabled='{{store_cert>0}}'/>
+    </view>
+    <view class='inputBox'>
+      <label class='label'>联系人:</label>
+      <input class='input' placeholder="输入框" placeholder-class="inputP" bindinput='getSales_name' value='{{sales_name}}' disabled='{{store_cert>0}}'/>
+    </view>
+    <view class='inputBox'>
+      <label class='label'>性别:</label>
+      <!-- <input class='input' placeholder="输入框" placeholder-class="inputP" bindinput='getSales_sex' value='{{sales_sex}}'/> -->
+      <picker name="picker_hx" class="input" value="{{sexArr[sex_index].id}}" data-selecthx="{{sexArr[sex_index].name}}" range="{{sexArr}}" range-key="{{'name'}}"  bindchange="bindPickerChange_sex" disabled='{{store_cert>0}}'>
+        <view class="picker" style='padding-left:0'>
+         <label style='color:#c7c7c7'>{{sexArr[sex_index].name?'':'选择框'}}</label>{{sexArr[sex_index].name}}
+        </view>
+      </picker>
+    </view>
+    <view class='inputBox'>
+      <label class='label'>联系电话:</label>
+      <input class='input' type='number' maxlength='11' placeholder="输入框" placeholder-class="inputP" bindinput='getPhone' value='{{phone}}' disabled='{{store_cert>0}}'/>
+    </view>
+    <view class='inputBox'>
+      <label class='label'>收货地址:</label>
+      <input class='input' placeholder="请填写能准确收到货物的地址" type="text" data-name="address" bindinput='getAddress' value='{{address}}'  disabled='{{store_cert>0}}'></input>
+    </view>
+    <view class='indentityBox'>
+      <label class='indentityLabel'>商户信息/营业执照(非必填):</label>
+      <view class='uploadIndentityBox'>
+        <view class='frontbackBox' bindtap="upload">
+          <!-- <image class='' mode='aspectFit' src="{{licence_image}}'"></image> -->
+          <image style='height:100%;width:100%;' src="{{licence_image}}" mode="aspectFill"/>
+          <text wx:if="{{store_cert==0}}" class="iconfont icon-add indentityIcon"></text>
+        </view>
+      </view>
+    </view>
+    <view class='line'></view>
+  </view>
+  <!-- <view class='contentBox'>
+    <view class='inputBox'>
+      <label class='label'>所在地区:</label>
+      <picker mode="region" bindchange="bindRegionChange">
+          <text wx:if="{{region}}" class="input">{{region}}</text>
+          <text wx:else class="input">选择省、市、区</text>
+      </picker>
+    </view>
+    <view class='inputBox' bindtap='onChangeAddress'>
+      <label class='label'>详细地址:</label>
+      <input class='input' placeholder="请填写街道小区楼层" type="text" data-name="address" value='{{address}}' readOnly></input>
+    </view>
+  </view> -->
+  <view class='contentBox2' wx:if="{{store_cert==0}}">
+    <button type="primary" bindtap='publishEvent'> 提交 </button>
+  </view>
+  <!-- <view class="flag {{flag ? 'flagTrue':'flagFalse'}}" wx:if="{{address}}">
+      {{flag?'所选定位在配送范围内':'所选定位不在配送范围内'}}
+    </view>
+    <map
+      id="map"
+      longitude="{{longitude}}"
+      latitude="{{latitude}}"
+      scale="13"
+      markers="{{markers}}"
+      polygons="{{polygons}}"
+      show-location
+      style="width: 100%; height: 300px;"
+    ></map> -->
+</scroll-view>

@@ -1,0 +1,30 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<view class='form'>
+  <form bindsubmit="formSubmit">
+    <view class='title'>查询条件</view>
+    <van-cell-group>
+    <view><van-field name="Name" label="访客姓名" placeholder="根据访客姓名搜索" clearable="{{ true }}" border="{{ false }}"/></view>
+      <view><van-field name="Phone" label="访客手机号" placeholder="根据访客手机号搜索" clearable="{{ true }}" border="{{ false }}"/></view>
+    </van-cell-group>
+    <view class='wings_blank mt-20'>
+      <button class='submit' type="primary" formType="submit" size='default'> 查 询 </button>
+    </view>
+  </form >
+</view>
+<view class='title' wx:if="{{count>0}}">待审批列表</view>
+<scroll-view class="list" scroll-y="true" lower-threshold="50" scroll-top="{{scrollTop}}" scroll-y="true" bindscrolltoupper="scrollToUpper">
+  <navigator class='item' wx:for="{{dataList}}" wx:key="{{index}}" url="../detail/index?Id={{item.Id}}&CreateTime={{item.CreateTime}}&Name={{item.Name}}&Sex={{item.Sex}}&Phone={{item.Phone}}&IdentityNumber={{item.IdentityNumber}}&Reason={{item.Reason}}&Number={{item.Number}}&PlateNumber={{item.PlateNumber}}&Unit={{item.Unit}}&DateTime={{item.DateTime}}&Remark={{item.Remark}}&InvitorName={{item.InvitorName}}&InvitorDep={{item.InvitorDep}}&CheckStatus={{item.CheckStatus}}&Checker={{item.Checker}}&CheckDate={{item.CheckDate}}&Date={{item.Date}}&StartTime={{item.StartTime}}&EndTime={{item.EndTime}}&Remark={{item.Remark}}&SName={{item.SName}}&SDDetailName={{item.SDDetailName}}&OpenId4In={{item.OpenId4In}}&OpenId4Out={{item.OpenId4Out}}&RefuseReason={{item.RefuseReason}}">
+    <view class='line'>
+      <label class="left {{item.CheckStatus==1?'green':item.CheckStatus==-1?'red':''}}">{{item.CheckStatus=='0'?'未审核':item.CheckStatus=='1'?'审核通过':'审核拒绝'}}</label><label class='right'>{{item.CreateTime}}</label>
+    </view>
+    <view class='line'>
+      <label class="left">被访人：{{item.SName}}</label><label class='right'>访客姓名：{{item.Name}}</label>
+    </view>
+  </navigator>
+  <view class="title-footer" wx:if="{{count>0}}">
+    <text class="f-24 col-9 cont">数据加载完毕</text>
+  </view>
+</scroll-view>
+<!-- </view> -->
+<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>

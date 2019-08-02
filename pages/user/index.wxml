@@ -1,0 +1,32 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<scroll-view class="scroll" scroll-y="true">
+  <van-action-sheet show="{{ show }}" title="{{title}}" bind:close="onClose">
+    <view style='padding-left:24rpx;'>
+      <van-radio-group value="{{ radio }}" checked-color="#07c160" bind:change="onChange">
+        <van-radio wx:for="{{visitorList}}" wx:key="{{index}}" name="{{index}}" >
+          <view class="item">
+            <view class='name'>{{item.SName}} {{item.SSex}} {{item.SMPhone}}</view>
+            <view class='department'>{{item.SDDetailName}}</view>
+          </view>
+        </van-radio>
+      </van-radio-group>
+    </view>
+  </van-action-sheet>
+  <view class='form'>
+    <form bindsubmit="formSubmit">
+      <view class='title'>基本信息</view>
+      <van-cell-group>
+        <van-field name="Name" label="姓名" value="{{ userInfo.SName }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="Sex" label="性别" value="{{ userInfo.SSex }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="Phone" label="联系电话" value="{{ userInfo.SMPhone }}" placeholder="--" border="{{ false }}" disabled maxlength="{{maxlengthPhome}}"/>
+        <van-field name="SDDetailName" label="部门" value="{{ userInfo.SDDetailName }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="SNo" label="工号" value="{{ userInfo.SNo }}" placeholder="--" disabled border="{{ false }}"/>
+      </van-cell-group>
+    </form >
+    <button class='btn wings_blank' type="primary" size='default' bindtap='updatePassword'> 修改密码 </button>
+    <button class='btn wings_blank bg_white' type="primary" size='default' bindtap='logout'> 退 出 </button>
+  </view>
+</scroll-view>
+<!-- </view> -->
+<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>

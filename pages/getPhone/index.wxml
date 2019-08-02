@@ -1,0 +1,10 @@
+<view class='page'>
+  
+  <form bindsubmit="formSubmit">
+    <view class='title'>登记手机号后即可获得自动收发预约微信通知的权限</view>
+    <view class='wings_blank'>
+      <van-field name="Phone" label="手机号" placeholder="请填写您的手机号" clearable border="{{ false }}"/>
+    </view>
+    <button class='btn' type="primary" formType="submit"> 确 认 </button>
+  </form>
+</view>

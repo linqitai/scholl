@@ -1,0 +1,10 @@
+{
+    "navigationBarTitleText": "预约登记",
+    "navigationBarBackgroundColor": "#228B22",
+    "navigationBarTextStyle": "white",
+    "usingComponents": {
+      "refresh-view": "/components/RefreshView/refresh-view",
+      "tab-bar": "/components/TabBar/tabbar",
+      "van-field": "/dist/field/index"
+    }
+}

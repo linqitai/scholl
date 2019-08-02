@@ -1,0 +1,34 @@
+<view class='wrapper'>
+  <scroll-view class="container" lower-threshold="100" scroll-y="true" bindscrolltolower="scrollToBottom" bindscroll="scroll">
+    
+    <view class="coupon-list" wx:if="{{list.length}}">
+      <view class="item" wx:for="{{list}}" wx:for-item="item" wx:key="index" data-salesman_id='{{item.salesman_id}}' bindtap='toPerformance'>
+          <view class='itemLeft'>
+            <view class='line1'>
+              <text class='f-28'>商户名称: {{item.name}}</text>
+            </view>
+            <view class='line2'>
+              <text class='text' style='font-size:26rpx'>地址: {{item.address}}</text>
+            </view>
+            <view class='line3' style='font-size:22rpx'>
+              最近订购日期: {{item.sales_time}}
+            </view>
+          </view>
+          <view class='itemRight'>
+            <label class="toUseBtn {{item.store_cert=='已认证'?'orange':'gray'}}">{{item.store_cert}}</label>
+          </view>
+        </view>
+    </view>
+    <view wx:else>
+      <view class="yoshop-notcont">
+        <text class="iconfont icon-meiyougengduo"></text>
+        <text class="cont">亲，您还没有推广的商家</text>
+      </view>
+    </view>
+    <!-- 底线 -->
+    <view class="title-footer p-r" wx:if="{{isLastPage}}">
+      <text class="f-24 col-9 cont">我是有底线的</text>
+      <view class="hr"></view>
+    </view>
+  </scroll-view>
+</view>

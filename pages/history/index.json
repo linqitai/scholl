@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+      "refresh-view": "/components/RefreshView/refresh-view",
+      "tab-bar": "/components/TabBar/tabbar",
+      "van-field": "/dist/field/index"
+    }
+}

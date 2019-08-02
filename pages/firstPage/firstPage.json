@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "授权登录",
+    "usingComponents": {
+      "van-field": "/dist/field/index",
+      "van-button": "/dist/button/index"
+    }
+}

@@ -1,0 +1,7 @@
+/* 搜索框组件 */
+/* @import "components/search/search.wxss"; */
+
+.form{
+  width: 100%;
+  height: auto;
+}

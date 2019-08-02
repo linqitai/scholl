@@ -1,0 +1,25 @@
+<view class='page'>
+
+<image class="img" src="../../images/logo.png"></image>
+<button class='btn1' type="warn" bindtap='toCheck'> 预约审批 </button>
+<button class='btn3' type="primary" bindtap="toDatePage"> 访客预约 </button>
+<button class='btn2 color-text-1' type="default" bindtap="toLogin"> 被访人预约 </button>
+
+  <view class='searchBox'>
+    <!-- <van-field label="预约码" placeholder="根据预约码查询预约信息" clearable="{{ true }}" border="{{ false }}"/> -->
+    <!-- <label>预约码</label>input
+    <van-button type="info" bindtap="searchInfo">查 询</van-button> -->
+    <van-cell-group>
+      <van-field
+        center
+        clearable
+        placeholder="根据预约码查询预约信息"
+        border="{{ false }}"
+        use-button-slot
+        bind:change="onChange"
+      >
+        <van-button slot="button" size="small" type="primary" bindtap="searchInfo">查询</van-button>
+      </van-field>
+    </van-cell-group>
+  </view>
+</view>
