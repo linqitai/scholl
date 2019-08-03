@@ -7,8 +7,8 @@ App({
     user_id: null,
     userInfo:{},
     access_token: "",
-    appid: "wx9582ea0575cc85be",
-    secret: "384a72d1d9f91528bb87792eff567f7a",
+    appid: "wx31583db6413b8fed",
+    secret: "22e05f670434da88586fef1c7eab275c",
     openid:"",
     OpenId4In:"",//在firstPage页面已经获得
     OpenId4Out: "",//在firstPage页面已经获得

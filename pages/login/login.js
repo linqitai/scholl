@@ -6,15 +6,27 @@ Page({
    * 页面的初始数据
    */
   data: {
+    Role:"家长",
     Phone: "",
-    maxlengthPhone:11
+    maxlengthPhone:11,
+    Role_array:[],
+    Role_index: 0
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    this.setData({ Role_array: ['家长', '教师']})
+  },
+  bindRolePickerChange(e){
+    let _this = this;
+    console.log('Role_index', e.detail.value)
+    this.setData({
+      'Role_index': e.detail.value,
+      'Role': _this.data.Role_array[e.detail.value]
+    });
+    console.log('Role', _this.data.Role)
   },
   getPhoneInput(e){
     console.log("e",e.detail)
@@ -61,8 +73,9 @@ Page({
         let p = JSON.parse(prams.user_info);
         p.OpenId = App.globalData.openid;
         p.Phone = _this.data.Phone;
+        p.Role = _this.data.Role;
         console.log('p',p)
-        App._post_form('api/visitors/addWXUserInfo', p, function (res) {
+        App._post_form('api/XXYXT/addWXUserInfo', p, function (res) {
           console.log('res',res)
           let result = JSON.parse(res)
           if(result.code==1){

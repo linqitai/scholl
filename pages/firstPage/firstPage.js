@@ -21,8 +21,8 @@ Page({
           // let code = res.code;
           //把code传给接口
           let d = {
-            appid:"wx9582ea0575cc85be",
-            secret:"384a72d1d9f91528bb87792eff567f7a",
+            appid:App.globalData.appid,
+            secret:App.globalData.secret,
             js_code: res.code,
             grant_type:"authorization_code"
           }

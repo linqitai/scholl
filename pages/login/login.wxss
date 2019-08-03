@@ -57,3 +57,9 @@ page {
 .login-btn.button-hover {
   box-shadow: inset 0 5rpx 30rpx rgba(0, 0, 0, 0.15);
 }
+
+.flag{
+  font-size: 28rpx;
+  text-align: left;
+  color: #cc1e1e;
+}
