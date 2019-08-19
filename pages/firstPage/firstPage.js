@@ -60,19 +60,6 @@ Page({
         }
       }
     });
-    //wx.clearStorageSync();
-    // let isLogin = wx.getStorageSync('isLogin');
-    // console.log('isLogin', isLogin)
-    // if(!isLogin){
-    //   wx.navigateTo({
-    //     url: '../login/login',
-    //   })
-    // }
-    // App._get('api/personInfo/testLink', {},
-    //   function (res) {//成功
-    //     console.log(res, "res")
-    //   }
-    // )
   },
   onChange(e){
     console.log('e',e.detail)

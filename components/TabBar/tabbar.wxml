@@ -3,7 +3,11 @@
     <van-tabbar-item wx:for="{{tab_bar}}" wx:key="{{index}}" info="{{item.info}}" wx:if="{{item.is_show}}">
       <image slot="icon" src="/images/tab-bar/{{item.icon}}.png" mode="aspectFit"/>
       <image slot="icon-active" src="/images/tab-bar/{{item.icon}}-active.png" mode="aspectFit" />
-      {{item.name}}
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" class='my_btn'>
+          {{item.name}}
+        </button>
+      </form>
     </van-tabbar-item>
   </van-tabbar>
 </view>

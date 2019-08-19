@@ -1,0 +1,22 @@
+/* 搜索框组件 */
+/* @import "components/search/search.wxss"; */
+
+.form{
+  width: 100%;
+  height: auto;
+}
+.enterCode{
+  margin-bottom: 20rpx;
+}
+.zindex{
+  overflow: hidden;
+  z-index: 1000;
+  background-color: white;
+}
+.sureBox{
+  margin-top: 60rpx;
+  margin-bottom: 60rpx;
+  overflow: hidden;
+  background-color: white;
+  z-index: 1000;
+}

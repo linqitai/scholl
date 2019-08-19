@@ -1,0 +1,17 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<scroll-view class="scroll" scroll-y="true">
+  <view class='form'>
+    <form>
+      <view class='title'>学生信息</view>
+      <van-field label="姓名" value="{{ SName }}" disabled border="{{ false }}"/>
+      <van-field label="性别" value="{{ SSex }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="签到时间" value="{{ EnterDoorDT }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="班主任" value="{{ TeacherName }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="家长姓名" value="{{ PUPName }}" placeholder="--" disabled border="{{ false }}"/>
+      <view data-phone="{{item.phoneNumber}}" bindtap='makePhoneCall'>
+      <van-field label="家长电话" value="{{ PUPPhone }}" placeholder="--" disabled border="{{ false }}"/>
+      </view>
+    </form >
+  </view>
+</scroll-view>

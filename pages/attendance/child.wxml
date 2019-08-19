@@ -1,0 +1,34 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<view class='form'>
+    <picker name="StartDate" mode="date" value="{{form.StartDate}}" bindchange="bindStartDateChange">
+      <view class="picker2">
+        <view class='text_box'>
+          <view class='time'>{{form.StartDate}}</view>
+          <view class='icon'><van-icon name="arrow-down" custom-style="color:green"/></view>
+        </view>
+      </view>
+    </picker>
+    <picker name="Name" value="{{name_index}}" range="{{name_array}}" bindchange="bindNamePickerChange">
+      <view class="picker">
+        <label class='label'>孩子姓名</label><van-icon name="arrow" size="1em" color="gray" custom-style="float:right;margin-top:8rpx;margin-left:20rpx;"/><text class='text'>{{name_array[name_index]}} </text>
+      </view>
+    </picker>
+</view>
+<!-- <view class='title' wx:if="{{count>0}}">查询结果</view> -->
+<scroll-view class="list" scroll-y="true" lower-threshold="50" scroll-top="{{scrollTop}}" scroll-y="true" bindscrolltoupper="scrollToUpper">
+  <view class='item' wx:for="{{dataList}}" wx:key="{{index}}">
+    <view class='line'>
+      <label class="left">姓名：{{ item.SName }}</label><label class="right">班级：{{ item.SDDetailName }}</label>
+    </view>
+    <view class='line'>
+      <label class="left" style="font-size:30rpx">出入方式：{{item.ReadHeadNote=="进门"?"入校":"出校"}}</label>
+      <label class='right' style="font-size:30rpx">出入时间：{{item.RecordDT}}</label>
+    </view>
+  </view>
+  <view class="title-footer" wx:if="{{count==0}}">
+    <text class="f-24 col-9 cont">数据加载完毕</text>
+  </view>
+</scroll-view>
+<!-- </view> -->
+<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>

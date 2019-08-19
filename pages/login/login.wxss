@@ -63,3 +63,12 @@ page {
   text-align: left;
   color: #cc1e1e;
 }
+.label_style{
+  width: 90px !important;
+  float: left;
+}
+.picker .text{
+  float: left;
+}
+
+

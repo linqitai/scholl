@@ -1,5 +1,6 @@
 let App = getApp();
-
+let dataList = [];
+let accessList = [];
 Page({
   data: {
     // banner轮播组件属性
@@ -9,7 +10,7 @@ Page({
     duration: 800, // 滑动动画时长
     imgHeights: {}, // 图片的高度
     imgCurrent: {}, // 当前banne所在滑块指针
-    test: '/pages/category/index?category_id=29',
+    test:'/pages/category/index?category_id=29',
     // 页面元素
     scrollTop: 0,
     top: '',
@@ -17,44 +18,77 @@ Page({
     windowWidth: '',
     windowHeight: '',
     maxlengthPhome: 11,
-    maxlengthIndentityNumber: 18,
-    form: {
-      StartDate: "",
+    maxlengthIndentityNumber:18,
+    form:{
+      StartDate:"",
       EndDate: "",
-      OpenId4In: ""
+      OpenId4In:""
     },
     type: '',
-    count: 0,
-    dataList: [],
+    count:0,
+    accessCount:0,
+    dataList:[],
+    accessList: [],
     sex_array: ['男', '女'],
-    reason_array: ['个人来访', '公务往来', '会议', '快递', '面试', '其他'],
-    number_array: ['1', '2', '3', '4', '5', '6', '多于6人']
+    reason_array: ['个人来访', '公务往来', '会议', '快递', '面试','其他'],
+    number_array: ['1', '2', '3', '4', '5', '6','多于6人'],
+    name_array:[],
+    name_index:0,
+    Name:"",
+    ClassName:App.globalData.userInfo.ClassName
   },
   onShow: function () {
     // 刷新组件
     this.refreshView = this.selectComponent("#refreshView")
+    // wx.setNavigationBarTitle({
+    //   title: ''
+    // })
+    // wx.setNavigationBarColor({
+    //   frontColor: '#ffffff', // 必写项
+    //   backgroundColor: "#228B22" // 传递的颜色值
+    // })
+  },
+  onLoad: function (options) {
     let _this = this;
     console.log(App.globalData.tab_bar_type, "App.globalData.tab_bar_type")
+    let childListArr = [];
+    for (let i = 0; i < App.globalData.childList.length;i++){
+      childListArr.push(App.globalData.childList[i].SName);
+    }
+    console.log('childListArr', childListArr)
     this.setData({
-      active: 1,
+      active: 0,
       tab_bar: App.getTab_bar(App.globalData.tab_bar_type),
-      type: App.globalData.tab_bar_type
+      type: App.globalData.tab_bar_type,
+      name_array: childListArr
     })
     console.log("history")
     console.log('type', _this.data.type)
     this.setData({ 'form.StartDate': App.getDate(new Date().getTime()) })
     this.setData({ 'form.EndDate': App.getDate(new Date().getTime()) })
 
-    _this.getLeaveListByDateAndClassName()
+    if (App.globalData.tab_bar_type=="教师"){
+      _this.getStudentListByClassName()
+    }else{
+      _this.getChildListByDateAndSActualNo()
+    }
+    console.log('App.globalData.userInfo', App.globalData.userInfo)
   },
-  onLoad: function (options) {
-    
+  bindNamePickerChange(e) {
+    let _this = this;
+    console.log('name_index', e.detail.value)
+    this.setData({
+      name_index: e.detail.value
+    });
+    _this.getChildListByDateAndSActualNo();
   },
   bindStartDateChange: function (e) {
+    let _this = this;
     console.log('picker发送选择改变，携带值为', e.detail.value);
     this.setData({
       'form.StartDate': e.detail.value
     });
+    _this.getChildListByDateAndSActualNo();
   },
   bindEndDateChange: function (e) {
     console.log('picker发送选择改变，携带值为', e.detail.value);
@@ -62,16 +96,16 @@ Page({
       'form.EndDate': e.detail.value
     });
   },
-  getLeaveListByDateAndClassName() {
+  getChildListByDateAndSActualNo(){
     let _this = this;
-    let url = "api/XXYXT/getLeaveListByDateAndClassName";
+    let url = "api/XXYXT/getChildListByDateAndSActualNo";
     let prams = {
-      ClassName: App.globalData.userInfo.SRoomNo,
-      CreateDate: App.getDate(new Date().getTime())
+      CreateDate: _this.data.form.StartDate,
+      SActualNo: App.globalData.childList[_this.data.name_index].SActualNo
     }
     App._post_form(url, prams, function (res) {
       let result = JSON.parse(res)
-      // console.log("result", result)
+      console.log("result", result)
       if (result.code == 1) {
         _this.setData({
           count: result.count,
@@ -83,22 +117,90 @@ Page({
       }
     })
   },
-  formSubmit(e) {
+  getStudentListByClassName(){
+    let _this = this;
+    let url = "api/XXYXT/getStudentListByClassName";
+    let prams = {
+      ClassName: App.globalData.userInfo.ClassName
+    }
+    App._post_form(url, prams, function (res) {
+      let result = JSON.parse(res)
+      console.log("result", result)
+      if (result.code == 1) {
+        _this.setData({
+          count: result.count,
+          //dataList: result.data
+        })
+        dataList = result.data;
+        console.log('dataList', dataList)
+        _this.getAccessListByDateAndClassName();
+      } else {
+        console.log("msg", result.msg)
+        App.showToast(result.msg);
+      }
+    })
+  },
+  getAccessListByDateAndClassName() {
+    let _this = this;
+    let url = "api/XXYXT/getAccessListByDateAndClassName";
+    let prams = {
+      ClassName: App.globalData.userInfo.ClassName,
+      CreateDate: _this.data.form.StartDate,
+      ReadHeadNote:"进门"
+    }
+    App._post_form(url, prams, function (res) {
+      let result = JSON.parse(res)
+      console.log("result", result)
+      if (result.code == 1) {
+        _this.setData({
+          accessCount: result.count,
+          accessList: result.data
+        })
+        accessList = result.data;
+        console.log('accessList', accessList)
+        if (result.count==0){
+          for (let i = 0; i < _this.data.count; i++) {
+            dataList[i].EnterDoorDT = ""
+          }
+          _this.setData({
+            dataList: dataList
+          })
+        }else{
+          for (let i = 0; i < _this.data.count; i++) {
+            for (let j = 0; j < _this.data.accessCount; j++) {
+              console.log('dataList[i].SActualNo', dataList[i].SActualNo)
+              console.log('accessList[j].SActualNo', accessList[j].SActualNo)
+              if (dataList[i].SActualNo == accessList[j].SActualNo) {
+                dataList[i].EnterDoorDT = accessList[j].RecordDT
+                _this.setData({
+                  dataList: dataList
+                })
+              }
+            }
+          }
+        }
+      } else {
+        console.log("msg", result.msg)
+        App.showToast(result.msg);
+      }
+    })
+  },
+  formSubmit(e){
     let _this = this;
     console.log('form', e.detail.value)
     _this.setData({
       form: e.detail.value
     });
     console.log('App.globalData.tab_bar_type', App.globalData.tab_bar_type)
-
+    
     console.log('form', _this.data.form)
     let url = "";
-    if (App.globalData.tab_bar_type == "in") {
+    if (App.globalData.tab_bar_type=="in"){
       url = "api/visitors/getListByTimeAndOpenId4In"
       _this.setData({
         'form.OpenId4In': wx.getStorageSync('openid')
       });
-    } else {
+    }else{
       url = "api/visitors/getListByTimeAndOpenId4Out"
       _this.setData({
         'form.OpenId4Out': wx.getStorageSync('openid')
@@ -114,12 +216,12 @@ Page({
       let result = JSON.parse(res)
       if (result.code == 1) {
         //console.log("data", result.data)
-        if (result.count == 0) {
+        if (result.count==0){
           App.showToast("暂无记录")
         }
         _this.setData({
-          count: result.count,
-          dataList: result.data
+          count:result.count,
+          dataList:result.data
         })
       } else {
         console.log("msg", result.msg)
@@ -128,7 +230,7 @@ Page({
     })
     //wx.hideNavigationBarLoading()
   },
-  to_shopcart_view() {
+  to_shopcart_view(){
     wx.navigateTo({
       url: "../flow/index"
     });
@@ -143,7 +245,7 @@ Page({
         left: e.touches[0].clientX,
         top: e.touches[0].clientY
       })
-    } else {
+    }else{
       this.setData({
         left: 650,
         top: 1110
@@ -184,10 +286,10 @@ Page({
     // this.getGoodsData();
     // this.getBestGoodsData();
   },
-  _pullState: function (e) {
-    console.log(e, "_pullState")
+  _pullState: function(e) {
+    console.log(e,"_pullState")
   },
-  scroll: function (t) {
+  scroll: function(t) {
     this.setData({
       indexSearch: t.detail.scrollTop
     }), t.detail.scrollTop > 300 ? this.setData({

@@ -1,0 +1,45 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<view class='form'>
+    <picker name="StartDate" mode="date" value="{{form.StartDate}}" bindchange="bindStartDateChange">
+      <view class="picker2">
+        <view class='text_box'>
+          <view class='time'>{{form.StartDate}}</view>
+          <view class='icon'><van-icon name="arrow-down" custom-style="color:green"/></view>
+        </view>
+      </view>
+    </picker>
+</view>
+<view class="statistics item">
+  <label>班级</label><label>应到</label><label>实到</label><label>未到</label>
+</view>
+<view class="statistics item2 color">
+  <label class="label">
+    <picker value="{{clssName_index}}" range="{{className_array}}" bindchange="bindClassNamePickerChange">
+      <text class='text clickable'>{{className_array[clssName_index]}}</text>
+    </picker>
+  </label>
+  <label class="clickable label" bindtap="getList" data-status="yingdao">{{count}}</label>
+  <label class="clickable label" bindtap="getList" data-status="shidao">{{shidao}}</label>
+  <label class="clickable label" bindtap="getList" data-status="weidao">{{weidao}}</label>
+</view>
+<!-- <view class='title' wx:if="{{count>0}}">查询结果</view> -->
+<scroll-view class="list" scroll-y="true" lower-threshold="50" scroll-top="{{scrollTop}}" scroll-y="true" bindscrolltoupper="scrollToUpper">
+  <navigator class='item' wx:for="{{dataList}}" wx:key="{{index}}" url='../attendance/detail?Id={{item.Id}}&SName={{item.SName}}&SSex={{item.SSex}}&EnterDoorDT={{item.EnterDoorDT}}&TeacherName={{item.TeacherName}}&PUPName={{item.PUPName}}&PUPPhone={{item.PUPPhone}}'>
+    <view class='line'>
+      <label class="left">姓名：{{ item.SName }}</label><label class='right'>性别：{{ item.SSex }}</label>
+    </view>
+    <view class='line'>
+      <label class="left">签到时间：<text class="{{item.EnterDoorDT==''?'red':''}}">{{ item.EnterDoorDT==""?'未签':item.EnterDoorDT }}</text> </label>
+      <label class='right'>班主任：{{item.TeacherName}}</label>
+    </view>
+  </navigator>
+  <view class="title-footer" wx:if="{{count>0}}">
+    <text class="f-24 col-9 cont">数据加载完毕</text>
+  </view>
+  <view class="title-footer" wx:if="{{count==0}}">
+    <text class="f-24 col-9 cont">请先录入此班级学生数据</text>
+  </view>
+</scroll-view>
+<!-- </view> -->
+<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>

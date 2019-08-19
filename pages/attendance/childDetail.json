@@ -1,13 +1,12 @@
 {
-    "navigationBarTitleText": "个人中心",
+    "navigationBarTitleText": "学生信息",
     "navigationBarBackgroundColor": "#228B22",
     "navigationBarTextStyle": "white",
     "usingComponents": {
       "refresh-view": "/components/RefreshView/refresh-view",
       "tab-bar": "/components/TabBar/tabbar",
       "van-field": "/dist/field/index",
-      "van-popup": "/dist/popup/index",
       "van-dialog": "/dist/dialog/index",
-      "van-button": "/dist/button/index"
+      "i-modal": "/iView/modal/index"
     }
 }

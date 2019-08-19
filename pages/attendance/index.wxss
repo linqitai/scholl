@@ -26,3 +26,20 @@
   padding-top: 6rpx;
   padding-left: 6rpx;
 }
+
+.item2{background-color: white;font-size: 14px;margin-top: 2px;padding: 10px 12px;}
+
+.statistics{
+  display: flex;
+}
+.statistics label{
+  flex: 1;
+  font-size: 32rpx;
+  text-align: center;
+}
+
+.color .clickable{
+  color: rgb(14, 200, 233);
+  text-decoration: underline;
+}
+
