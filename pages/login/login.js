@@ -1,5 +1,6 @@
 let App = getApp();
-
+let form_ids = [];
+let count = 0;
 Page({
 
   /**
@@ -10,23 +11,56 @@ Page({
     Phone: "",
     maxlengthPhone:11,
     Role_array:[],
-    Role_index: 0
+    Role_index: 0,
+    flag:"务必填写与孩子身份绑定的家长手机号"
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({ Role_array: ['家长', '教师']})
+    this.setData({ 
+      Role_array: App.globalData.Role_array
+    })
+  },
+  collectFormIds(formId) {
+    form_ids=[];
+    form_ids.push(formId);
+  },
+  saveFormId(e){
+    let _this = this;
+    let formId = e.detail.formId;
+    _this.collectFormIds(formId);
+    console.log('form_id', e.detail.formId)
+    if (form_ids[0] != 'the formId is a mock one') {
+      App.globalData.formIds = form_ids;
+      let prams = {
+        Form_ids: App.globalData.formIds,
+        SubDate: _this.data.SubDate,
+        OpenId: App.globalData.openid
+      }
+      console.log('prams', prams)
+      App._post_form('api/XXYXT/saveForm_id', prams, function (res) {
+        console.log("intod getForm_id")
+        //let result = JSON.parse(res);
+        console.log('getForm_result', res)
+      })
+    }
   },
   bindRolePickerChange(e){
     let _this = this;
-    console.log('Role_index', e.detail.value)
+    let index = e.detail.value;
+    console.log('Role_index', index)
     this.setData({
-      'Role_index': e.detail.value,
-      'Role': _this.data.Role_array[e.detail.value]
+      'Role_index': index,
+      'Role': _this.data.Role_array[index]
     });
     console.log('Role', _this.data.Role)
+    if (index == 1){
+      _this.setData({
+        flag:"务必填写已经在后台登记的教师手机号"
+      })
+    } 
   },
   getPhoneInput(e){
     console.log("e",e.detail)
@@ -79,29 +113,17 @@ Page({
           console.log('res',res)
           let result = JSON.parse(res)
           if(result.code==1){
-            _this.navigateBack();
+            wx.redirectTo({
+              url: "../user/index",
+            })
           }else{
             console.log('msg', result.msg)
-            App.showToast(result.msg)
+            App.showModel(result.msg)
           }
         });
       }
     });
   },
-  /**
-     * 获取当前用户信息
-     */
-  // getUserDetail: function () {
-  //   let _this = this;
-  //   App._get('user.index/detail', {}, function (result) {
-  //     App.globalData.userInfo = result.data.userInfo
-  //     App.globalData.orderCount = result.data.orderCount
-  //     console.log(App.globalData.userInfo, "App.globalData.userInfo")
-  //     if (App.globalData.userInfo.store_cert == 1) {
-  //       App.globalData.tab_bar[2].is_show = true
-  //     }
-  //   });
-  // },
   /**
    * 授权成功 跳转回原页面
    */

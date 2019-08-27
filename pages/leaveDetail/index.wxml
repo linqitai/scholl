@@ -1,0 +1,41 @@
+<refresh-view id='refreshView' bind:onRefresh="onPullDownRefresh"/>
+<!-- <view class="container pd_b100" bindtouchstart='handletouchstart' bindtouchmove='handletouchmove' bindtouchend='handletouchend' bindtouchcancel='handletouchcancel'> -->
+<scroll-view class="scroll" scroll-y="true">
+  <view class='form'>
+    <form>
+      <view class='title'>请假详情</view>
+      <van-field label="姓名" value="{{ SName }}" disabled border="{{ false }}"/>
+      <van-field label="性别" value="{{ SSex }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="家长姓名" value="{{ PUPName }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="家长电话" value="{{ PUPPhone }}" placeholder="--" disabled border="{{ false }}"/>
+      <van-field label="请假事由" value="{{ Reason }}" placeholder="--" disabled border="{{ false }}"/>
+    </form >
+    <view class='enterCodeBox' wx:if="{{CheckStatus == '1' && Type == 'out'}}">
+      <canvas class='canvas' style="width:{{qrcodeWidth}}px; height:{{qrcodeWidth}}px;" canvas-id='canvas' bindlongtap='save'></canvas>
+      <view class='enterCode f-38'>预约码:{{ EnterCode }}</view>
+      <view class='pd_b40 wings_blank'>到甲方单位的时候请提供此二维码或者报此数字邀约码进行确认(记得带身份证哦)</view>
+    </view>
+    <view wx:if="{{CheckStatus == '0' && Type == 'check'}}">
+    <form bindsubmit="passSubmit" report-submit="true">
+      <button class='btn color_white' formType="submit" type="primary"> 审核通过 </button>
+    </form>
+    <van-dialog
+      class="zindex"
+      use-slot
+      title="拒绝理由"
+      show="{{ show }}"
+      show-cancel-button
+      confirm-button-open-type="getUserInfo"
+      bind:close="handleClose"
+      bind:getuserinfo="getUserInfo"
+    > 
+      <view class='sureBox'>
+        <van-field value="{{ RefuseReason }}" input-align="{{ inputAlign }}" placeholder="请给对方一个拒绝的理由" border="{{ false }}" bindinput="resuseReasonInput"/>
+      </view>
+    </van-dialog>
+    <form bindsubmit="refuseSubmit" report-submit="true">
+      <button class='btn color_white mb-40' formType="submit" type="warn"> 审核拒绝 </button>
+    </form>
+    </view>
+  </view>
+</scroll-view>

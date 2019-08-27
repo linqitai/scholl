@@ -15,18 +15,80 @@
   </van-action-sheet>
   <view class='form'>
     <form bindsubmit="formSubmit">
-      <view class='title'>基本信息</view>
+      <view class='title'>{{ type }}信息</view>
       <van-cell-group>
-        <van-field name="Name" label="姓名" value="{{ userInfo.SName }}" placeholder="--" disabled border="{{ false }}"/>
-        <van-field name="Sex" label="性别" value="{{ userInfo.SSex }}" placeholder="--" disabled border="{{ false }}"/>
-        <van-field name="Phone" label="联系电话" value="{{ userInfo.SMPhone }}" placeholder="--" border="{{ false }}" disabled maxlength="{{maxlengthPhome}}"/>
-        <van-field name="SDDetailName" label="部门" value="{{ userInfo.SDDetailName }}" placeholder="--" disabled border="{{ false }}"/>
-        <van-field name="SNo" label="工号" value="{{ userInfo.SNo }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="Name" label="姓名" value="{{ form.name }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="Sex" label="性别" value="{{ form.sex }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field name="Phone" label="联系电话" value="{{ form.phone }}" placeholder="--" border="{{ false }}" disabled maxlength="{{maxlengthPhome}}"/>
+        <view wx:if="{{ type=='教师' }}">
+          <van-field label="所带班级" value="{{ form.className }}" placeholder="--" disabled border="{{ false }}"/>
+        </view>
+        <van-field wx:if="{{ form.address }}" name="SDDetailName" label="家庭住址" value="{{ form.address }}" placeholder="--" autosize disabled border="{{ false }}"/>
       </van-cell-group>
+      <view wx:if="{{ type=='家长' }}">
+        <view class='title'>孩子信息</view>
+        <view class='item' wx:for="{{list}}" wx:key="{{index}}">
+          <view class='line'>
+            <label class="left">姓名：{{ item.SName }}</label><label class='right'>性别:{{ item.SSex }}</label>
+          </view>
+          <view class='line'>
+            <label class="left">班主任：{{item.TeacherName}}</label><label class='right'>家长：{{item.PUPName}}</label>
+          </view>
+        </view>
+      </view>
+      
     </form >
-    <button class='btn wings_blank' type="primary" size='default' bindtap='updatePassword'> 修改密码 </button>
-    <button class='btn wings_blank bg_white' type="primary" size='default' bindtap='logout'> 退 出 </button>
+    <button class='btn wings_blank mb-140' type="primary" size='default' bindtap='switch_account_btn'>切换身份</button>
+    <!-- <button class='btn wings_blank bg_white' type="primary" size='default' bindtap='logout'> 退 出 </button> -->
   </view>
 </scroll-view>
+<van-popup show="{{ showSwitchPop }}" overlay-style="background-color:rgba(0,0,0,0.7)" bind:close="close_switch_account" custom-style="width:80%;border-radius: 12rpx;">
+  <view class="popSwitch">
+    <view class="text">
+      <view class="title">切换身份</view>
+      <view class="content">
+        <view style="margin-bottom:30rpx;">
+        当前登录者是{{ type }}：{{ type=="教师"?userInfo.SName: type=="家长"? userInfo.PUPName:type=="管理员"?userInfo.Name:""}} 
+        </view>
+        <picker range="{{Role_array}}" bindchange="bindRolePickerChange">
+          <view class="picker">
+            <view class='label_style'>选择身份</view><text class='text'>{{Role_array[Role_index]}}</text>
+          </view>
+        </picker>
+        <form bindsubmit="saveFormId" report-submit="{{true}}" class='form_class'>
+          <button formType="submit" class='form_button'>
+            <van-field label="登记手机号" maxlength="{{maxlengthPhone}}" placeholder="您的手机号" border="{{ false }}" bindinput="getPhoneInput"/>
+          </button>
+        </form>
+        <view class='flag'>{{ flag }}</view>
+      </view>
+    </view>
+    <view class="vvd">
+      <button class="login-btn mt-40" openType="getUserInfo" lang="zh_CN" bindgetuserinfo="authorLogin">确 认</button>
+    </view>
+  </view>
+</van-popup>
+<van-popup show="{{ showPop }}" overlay-style="background-color:rgba(0,0,0,0.7)" bind:close="onClose" custom-style="width:80%;border-radius: 12rpx;">
+  <view class="pop">
+    <view class="text">
+      <view class="title">智能云校通欢迎您！</view>
+      <view class="content">
+        <view>当前登录者是{{ type }}：{{ type=="教师"?userInfo.SName: type=="家长"? userInfo.PUPName:type=="管理员"?userInfo.Name:""}}  </view>
+        <!-- <view style="font-size:24rpx;margin-top:20rpx;">每天签到后第二天才能接收到孩子到校通知</view> -->
+      </view>
+    </view>
+    <view class="vv">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" class='my_btn'>
+          <view class="vv">
+              确 定
+          </view>
+        </button>
+      </form>
+    </view>
+  </view>
+</van-popup>
 <!-- </view> -->
-<tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>
+<view wx:if="{{ isShow }}">
+  <tab-bar active="{{active}}" tab_bar="{{tab_bar}}"/>
+</view>

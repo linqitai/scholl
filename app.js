@@ -6,6 +6,8 @@ App({
   globalData: {
     user_id: null,
     userInfo:{},
+    childList:[],
+    role:"",
     access_token: "",
     appid: "wx31583db6413b8fed",
     secret: "22e05f670434da88586fef1c7eab275c",
@@ -13,64 +15,63 @@ App({
     OpenId4In:"",//在firstPage页面已经获得
     OpenId4Out: "",//在firstPage页面已经获得
     formId:"",
+    formIds:[],
     cart1:0,
     cart2:0,
     is_pifa_selected:false,
     sex_array: ['男', '女'],
+    Role_array: ['家长', '教师', '管理员'],
     reason_array: ['个人来访', '公务往来', '会议', '快递', '面试', '其他'],
     number_array: ['1', '2', '3', '4', '5', '6', '多于6人'],
     tab_bar_type:'',
-    tab_bar4in:[
+    tab_bar4parent:[
       {
-        name:'预约登记',
+        name:'孩子考勤',
         icon:'register',
-        url:'/pages/index/index',
         is_show:true
       },
-      {
-        name: '预约历史',
-        icon: 'history',
-        url:'/pages/history/index',
-        is_show: true
-      },
+      // {
+      //   name: '我要请假',
+      //   icon: 'history',
+      //   is_show: true
+      // },
       {
         name: '个人中心',
         icon: 'person',
-        url:'/pages/user/index',
         is_show: true
       }
     ],
-    tab_bar4out: [
+    tab_bar4teacher: [
       {
-        name: '预约登记',
+        name: '考勤列表',
         icon: 'register',
-        url: '/pages/date/index',
         is_show: true
       },
-      {
-        name: '预约历史',
-        icon: 'history',
-        url: '/pages/history/index',
-        is_show: true
-      }
-    ],
-    tab_bar4check: [
-      {
-        name: '预约审批',
-        icon: 'pifa',
-        url:'/pages/check/index',
-        is_show: true
-      },
-      {
-        name: '审批历史',
-        icon: 'history',
-        url: '/pages/checked/index',
-        is_show: true
-      },
+      // {
+      //   name: '请假列表',
+      //   icon: 'history',
+      //   is_show: true
+      // },
       {
         name: '个人中心',
         icon: 'person',
-        url: '/pages/user/index',
+        is_show: true
+      }
+    ],
+    tab_bar4admin: [
+      {
+        name: '考勤列表',
+        icon: 'register',
+        is_show: true
+      },
+      // {
+      //   name: '请假列表',
+      //   icon: 'history',
+      //   is_show: true
+      // },
+      {
+        name: '个人中心',
+        icon: 'person',
         is_show: true
       }
     ]
@@ -91,15 +92,15 @@ App({
   getTab_bar(tab_bar_type){
     let _this = this;
     console.log('tab_bar_type', tab_bar_type)
-    if (tab_bar_type == 'in') {
-      console.log('App.globalData.tab_bar4in', _this.globalData.tab_bar4in)
-      return _this.globalData.tab_bar4in;
-    } else if (tab_bar_type == 'out') {
-      console.log('App.globalData.tab_bar4out', _this.globalData.tab_bar4out)
-      return _this.globalData.tab_bar4out;
-    } else if (tab_bar_type == 'check') {
-      console.log('App.globalData.tab_bar4check', _this.globalData.tab_bar4check)
-      return _this.globalData.tab_bar4check;
+    if (tab_bar_type == '家长') {
+      console.log('App.globalData.tab_bar4parent', _this.globalData.tab_bar4parent)
+      return _this.globalData.tab_bar4parent;
+    } else if (tab_bar_type == '教师'){
+      console.log('App.globalData.tab_bar4teacher', _this.globalData.tab_bar4teacher)
+      return _this.globalData.tab_bar4teacher;
+    } else if (tab_bar_type == '管理员') {
+      console.log('App.globalData.tab_bar4admin', _this.globalData.tab_bar4admin)
+      return _this.globalData.tab_bar4admin;
     }
   },
   deal_number(order_total_price){
@@ -412,12 +413,12 @@ App({
   _post_form: function(url, data, success, fail, complete) {
     wx.showNavigationBarLoading();
     let App = this;
-    data.wxapp_id = App.siteInfo.uniacid;
-    if (data.user_info){
-      console.log("login")
-    }else{
-      data.token = wx.getStorageSync('token');
-    }
+    // data.wxapp_id = App.siteInfo.uniacid;
+    // if (data.user_info){
+    //   console.log("login")
+    // }else{
+    //   data.token = wx.getStorageSync('token');
+    // }
     wx.request({
       url: App.api_root + url,
       header: {

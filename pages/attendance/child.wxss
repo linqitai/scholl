@@ -26,3 +26,11 @@
   padding-top: 6rpx;
   padding-left: 6rpx;
 }
+
+.picker .label{
+  width: 90rpx;
+  text-align: left;
+}
+.picker .text{
+  float: right;
+}

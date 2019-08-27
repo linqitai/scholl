@@ -9,6 +9,7 @@
       "van-action-sheet": "/dist/action-sheet/index",
       "van-radio": "/dist/radio/index",
       "van-radio-group": "/dist/radio-group/index",
-      "i-input": "/iView/input/index"
+      "i-input": "/iView/input/index",
+      "van-icon": "/dist/icon/index"
     }
 }

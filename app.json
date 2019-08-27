@@ -1,5 +1,11 @@
 {
   "pages": [
+    "pages/user/index",
+    "pages/attendance/child",
+    "pages/attendance/index",
+    "pages/managementInfo/index",
+    "pages/attendance/detail",
+    "pages/attendance/childDetail",
     "pages/firstPage/firstPage",
     "pages/getPhone/index",
     "pages/updatePassword/index",
@@ -7,7 +13,7 @@
     "pages/check/index", 
     "pages/checked/index",
     "pages/index/index",
-    "pages/detail/index",
+    "pages/leaveDetail/index",
     "pages/detail2/index",
     "pages/history/index",
     "pages/login2/login2",
@@ -21,7 +27,6 @@
     "pages/search/index",
     "pages/flow/index",
     "pages/flow/checkout",
-    "pages/user/index",
     "pages/user/help/help",
     "pages/order/index",
     "pages/order/detail",

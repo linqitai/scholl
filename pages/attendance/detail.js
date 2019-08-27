@@ -46,20 +46,7 @@ Page({
     CheckDate: "",
     EnterCode: "",
     RefuseReason: "",
-    form:{
-      Name: "",
-      Sex: 0,
-      Phone: "",
-      IdentityNumber:"",
-      Reason:0,
-      Number:0,
-      PlateNumber:"",
-      Unit:"",
-      Date:"",
-      StartTime:"",
-      EndTime: "",
-      Remark:""
-    },
+    
     qrcodeWidth: qrcodeWidth,
     show: false,
     inputAlign: 'center'
@@ -76,148 +63,23 @@ Page({
     console.log('item.CreateTime', options.CreateTime);
     console.log('item.Name', options.Name);
     this.setData({
-      Type: App.globalData.tab_bar_type,
-      active: 1,
       Id: options.Id,
-      CreateTime: options.CreateTime,
-      Name: options.Name,
-      Sex: App.globalData.sex_array[options.Sex],
-      Phone: options.Phone,
-      IdentityNumber: options.IdentityNumber,
-      Reason: App.globalData.reason_array[options.Reason],
-      Number: App.globalData.number_array[options.Number],
-      PlateNumber: options.PlateNumber,
-      Unit: options.Unit,
-      DateTime: options.DateTime,
-      Remark: options.Remark,
-      InvitorName: options.InvitorName,
-      InvitorDep: options.InvitorDep,
-      CheckStatus: options.CheckStatus,
-      Checker: options.Checker,
-      CheckDate: options.CheckDate,
-      Date: options.Date,
-      StartTime: options.StartTime,
-      EndTime: options.EndTime,
-      Remark: (options.Remark == 'null' || options.Remark == null) ? "--" : options.Remark,
       SName: options.SName,
-      SMPhone: (options.SMPhone == 'null' || options.SMPhone == null) ? "--" : options.SMPhone,
-      SDDetailName: options.SDDetailName,
-      EnterCode: (options.EnterCode == 'null' || options.EnterCode == null) ? "--" : options.EnterCode,
-      OpenId4In: options.OpenId4In,
-      OpenId4Out: options.OpenId4Out,
-      RefuseReason: options.RefuseReason
+      SSex: options.SSex,
+      PUPName: options.PUPName,
+      PUPPhone: options.PUPPhone,
+      EnterDoorDT: options.EnterDoorDT,
+      TeacherName: options.TeacherName
     })
-    console.log("data:",this.data)
-    // this.setData({ 'form.Date': App.getDate(new Date().getTime()) })
-    // this.setData({ 'form.StartTime': App.getHM(new Date().getTime()) })
-    // this.setData({ 'form.EndTime': "17:00" })
-
-    qrcode = new QRCode('canvas', {
-      usingIn: this,
-      // text: "https://github.com/tomfriwel/weapp-qrcode",
-      image: '/images/logo.png',
-      width: qrcodeWidth,
-      height: qrcodeWidth,
-      // width: 150,
-      // height: 150,
-      colorDark: "#1CA4FC",
-      colorLight: "white",
-      correctLevel: QRCode.CorrectLevel.H,
-    });
-
-    // 生成图片，绘制完成后调用回调
-    qrcode.makeCode(_this.data.EnterCode)
-    if (_this.data.CheckStatus=='0'&&_this.data.Type=='check'){
-      if (App.globalData.access_token==""){
-        let d = {
-          appid: App.globalData.appid,
-          secret: App.globalData.secret,
-          grant_type: "client_credential"
-        }
-        let url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + d.appid + "&secret=" + d.secret;
-        wx.request({
-          url: url,
-          data: {},
-          method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
-          // header: {}, // 设置请求的 header  
-          success: function (res) {
-            console.log('res', res)
-            App.globalData.access_token = res.data.access_token;
-          }
-        });
-      }
-      
-    }
   },
-  passSubmit(e) {
+  makePhoneCall:function(e){
     let _this = this;
-    App.globalData.formId = e.detail.formId;
-    App.showModel("审核后不得修改，您决定好了吗？", function (e) {
-      console.log('e', e);
-      console.log('e', e.confirm);
-      if(e.confirm){
-        console.log("审核通过");
-        let prams = {
-          Id: _this.data.Id,
-          CheckStatus: "1",// 1通过，-1拒绝
-          Checker: App.globalData.userInfo.SName
-        }
-        console.log('prams', prams)
-        // 下面调用接口
-        App._post_form("api/visitors/check", prams, function (res) {
-          let result = JSON.parse(res)
-          console.log("result", result)
-          if (result.code == 1) {
-            let _access_token = App.globalData.access_token;
-            let url = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + _access_token;
-            let _jsonData = {
-              access_token: _access_token,
-              touser: _this.data.OpenId4Out,
-              template_id: 'WXeoh4UHmcuX1RyC2szpW1fzAoGtV3_pbueJ6HB2G-I',
-              form_id: App.globalData.formId,
-              page: "pages/index/index",
-              data: {
-                "keyword1": { "value": _this.data.Name, "color": "#173177" },
-                "keyword2": { "value": _this.data.CreateTime, "color": "#173177" },
-                "keyword3": { "value": App.getDateTime(new Date().getTime()), "color": "#173177" },
-                "keyword4": { "value": _this.data.SName, "color": "#173177" },
-                "keyword5": { "value": "审核通过", "color": "#173177" },
-                "keyword6": { "value": "无", "color": "#173177" },
-              }
-            }
-            console.log('_jsonData', _jsonData)
-            wx.request({
-              url: url,
-              data: _jsonData,
-              method: "POST",
-              success: function (res) {
-                console.log('消息发送成功', res.errMsg)
-                if (res.errMsg == 'request:ok'){
-                  App.showToast("操作成功");
-                  setTimeout(function () {
-                    wx.navigateTo({
-                      url: "../checked/index"
-                    });
-                  }, 1000)
-                }
-              },
-              fail: function (err) {
-                console.log('request fail ', err);
-              },
-              complete: function (res) {
-                console.log("request completed!");
-              }
-            })
-          } else {
-            App.showToast("操作失败");
-          }
-        })
+    wx.makePhoneCall({
+      phoneNumber: _this.data.PUPPhone,
+      success:function(res){
+        console.log('res', res)
       }
     })
-  },
-  resuseReasonInput(e){
-    console.log(e.detail)
-    this.setData({ RefuseReason:e.detail })
   },
   getUserInfo(event) {
     let _this = this;

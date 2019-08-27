@@ -40,3 +40,25 @@
 .my_tabbar{
   z-index: 1001;
 }
+.my_btn{
+  line-height: 1!important;
+  border: none!important;
+  background-color: transparent!important;
+  font-size: 30rpx!important;
+  color: inherit!important;
+  position: relative;
+}
+.my_btn::after{
+  border: none!important;
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  right: -10px;
+  bottom: -20px;
+}
+image {
+  width: 30px;
+  height: 18px;
+  display: block;
+}
