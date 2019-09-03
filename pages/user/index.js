@@ -25,7 +25,7 @@ Page({
     showSwitchPop:false,
     maxlengthPhone: 11,
     Phone:"",
-    Role:"家长",
+    Role:"",
     flag: "务必填写与孩子身份绑定的家长手机号"
   },
   
@@ -34,14 +34,13 @@ Page({
    */
   onLoad: function (options) {
     let _this = this;
-    _this.get_access_token();
-    _this.login();
-    
     let subDate = App.getDate(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
     _this.setData({
-      SubDate:subDate,
+      SubDate: subDate,
       Role_array: App.globalData.Role_array
     })
+    _this.get_access_token();
+    _this.login();
     _this.deletePastTimeForm_id();
   },
   getPhoneInput(e) {
@@ -189,7 +188,7 @@ Page({
               console.log('App.globalData.openid', App.globalData.openid)
               let prams = {
                 OpenId: App.globalData.openid,
-                Role: App.globalData.tab_bar_type||""
+                Role: _this.data.Role||""
               }
               console.log("====into haveUserInfo prams====", prams)
               App._post_form('api/XXYXT/haveUserInfo', prams, function (res) {
@@ -204,39 +203,52 @@ Page({
                   App.globalData.tab_bar_type = result.msg
                   _this.setData({
                     type: result.msg,
+                    Role:result.msg,
                     userInfo: result.data[0],
                     list: result.data,
                     active: 1,
                     tab_bar: App.getTab_bar(result.msg),
                     showPop: true
                   })
-                  App.globalData.childList = result.data;
-                  App.globalData.userInfo = _this.data.userInfo;
+                  // App.globalData.childList = result.data;
+                  App.globalData.userInfo = result.data[0];
                   console.log('App.globalData.userInfo', App.globalData.userInfo)
+                  let phone = _this.data.userInfo.SurrogateMPhone;
                   if (App.globalData.tab_bar_type == "家长") {
                     _this.setData({
-                      'form.name': _this.data.userInfo.PUPName,
-                      'form.sex': _this.data.userInfo.PUPSex,
-                      'form.phone': _this.data.userInfo.PUPPhone,
-                      'form.address': _this.data.userInfo.SDetailName,
+                      'form.name': _this.data.userInfo.SurrogateName,
+                      'form.relation': _this.data.userInfo.Relation,
+                      'form.sex': "",
+                      'form.phone': phone,
+                      'form.address': "",
                       isShow: true
                     })
-                    //_this.getForm_id();
+                    //获取孩子列表 getMyChildBySurrogateMPhone
+                    _this.getMyChildBySurrogateMPhone(phone)
                   } else if (App.globalData.tab_bar_type == '教师') {
+                    let name = "";
+                    let phone = "";
+                    if (result.tearch==1){
+                      name = _this.data.userInfo.STeacher1;
+                      phone = _this.data.userInfo.SMPhone1;
+                    } else if (result.tearch == 2){
+                      name = _this.data.userInfo.STeacher2;
+                      phone = _this.data.userInfo.SMPhone2;
+                    }
                     _this.setData({
-                      'form.name': _this.data.userInfo.SName,
-                      'form.sex': _this.data.userInfo.SSex,
-                      'form.phone': _this.data.userInfo.SMPhone,
+                      'form.name': name,
+                      'form.sex': "",
+                      'form.phone': phone,
                       'form.address': "",
-                      'form.className': _this.data.userInfo.SDDetailName,
+                      'form.className': _this.data.userInfo.SDetailName,
                       isShow: true
                     })
                   } else if (App.globalData.tab_bar_type == '管理员') {
                     console.log("_this.data.userInfo",_this.data.userInfo)
                     _this.setData({
-                      'form.name': _this.data.userInfo.Name,
-                      'form.sex': _this.data.userInfo.Sex,
-                      'form.phone': _this.data.userInfo.Phone,
+                      'form.name': _this.data.userInfo.OName,
+                      'form.sex': _this.data.userInfo.OSex,
+                      'form.phone': _this.data.userInfo.OPhone,
                       'form.address': "",
                       'form.className': "",
                       isShow: true
@@ -251,6 +263,23 @@ Page({
         }
       }
     });
+  },
+  getMyChildBySurrogateMPhone(phone) {
+    let _this = this;
+    let url = "api/XXYXT/getMyChildBySurrogateMPhone";
+    let prams = {
+      SurrogateMPhone: phone
+    }
+    App._post_form(url, prams, function (res) {
+      let result = JSON.parse(res)
+      console.log("result", result)
+      if (result.code == 1) {
+        App.globalData.childList = result.data;
+      } else {
+        console.log("msg", result.msg)
+        App.showToast(result.msg);
+      }
+    })
   },
   getForm_id(){
     console.log("into getForm_id")
@@ -267,7 +296,8 @@ Page({
     console.log("switch_account");
     let _this = this;
     _this.setData({
-      showSwitchPop: true
+      showSwitchPop: true,
+      Role:"家长"
     });
   },
   close_switch_account(){
