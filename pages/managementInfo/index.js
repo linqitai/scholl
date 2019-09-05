@@ -85,7 +85,7 @@ Page({
         classlist = result.data;
         let classArr = [];
         for(let i=0;i<classlist.length;i++){
-          classArr.push(classlist[i].ClassName)
+          classArr.push(classlist[i].SDetailName)
         }
         _this.setData({
           count: result.count,
@@ -217,6 +217,9 @@ Page({
             weidao: _this.data.count
           })
         } else {
+          for (let i = 0; i < _this.data.count; i++) {
+            dataList[i].EnterDoorDT = ""
+          }
           for (let i = 0; i < _this.data.count; i++) {
             for (let j = 0; j < _this.data.accessCount; j++) {
               console.log('dataList[i].SActualNo', dataList[i].SActualNo)

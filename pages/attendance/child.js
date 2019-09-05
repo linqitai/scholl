@@ -101,7 +101,7 @@ Page({
     let url = "api/XXYXT/getChildListByDateAndSActualNo";
     let prams = {
       CreateDate: _this.data.form.StartDate,
-      SActualNo: App.globalData.childList[_this.data.name_index].SActualNo
+      SActualNo: App.globalData.userInfo.SActualNo
     }
     App._post_form(url, prams, function (res) {
       let result = JSON.parse(res)
@@ -148,9 +148,11 @@ Page({
       CreateDate: _this.data.form.StartDate,
       ReadHeadNote:"进门"
     }
+    console.log('prams', prams)
     App._post_form(url, prams, function (res) {
+      console.log("getAccessListByDateAndClassName", res)
       let result = JSON.parse(res)
-      console.log("result", result)
+      console.log("getAccessListByDateAndClassName", result)
       if (result.code == 1) {
         _this.setData({
           accessCount: result.count,

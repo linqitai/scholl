@@ -31,7 +31,7 @@
     </view>
     <view class='line'>
       <label class="left">签到时间：<text class="{{item.EnterDoorDT==''?'red':''}}">{{ item.EnterDoorDT==""?'未签':item.EnterDoorDT }}</text> </label>
-      <label class='right'>班主任：{{item.TeacherName}}</label>
+      <!-- <label class='right'>班主任：{{item.TeacherName}}</label> -->
     </view>
   </navigator>
   <view class="title-footer" wx:if="{{count>0}}">

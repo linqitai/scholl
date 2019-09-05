@@ -18,14 +18,23 @@
       <view class='title'>{{ type }}信息</view>
       <van-cell-group>
         <van-field name="Name" label="姓名" value="{{ form.name }}" placeholder="--" disabled border="{{ false }}"/>
-        <van-field name="Sex" label="性别" value="{{ form.sex }}" placeholder="--" disabled border="{{ false }}"/>
+        <van-field wx:if="{{ form.relation }}" name="Relation" label="关系" value="{{ form.relation }}" placeholder="--" autosize disabled border="{{ false }}"/>
+        <van-field name="Sex" wx:if="{{ form.sex }}" label="性别" value="{{ form.sex }}" placeholder="--" disabled border="{{ false }}"/>
         <van-field name="Phone" label="联系电话" value="{{ form.phone }}" placeholder="--" border="{{ false }}" disabled maxlength="{{maxlengthPhome}}"/>
         <view wx:if="{{ type=='教师' }}">
           <van-field label="所带班级" value="{{ form.className }}" placeholder="--" disabled border="{{ false }}"/>
         </view>
         <van-field wx:if="{{ form.address }}" name="SDDetailName" label="家庭住址" value="{{ form.address }}" placeholder="--" autosize disabled border="{{ false }}"/>
+        
       </van-cell-group>
-      <view wx:if="{{ type=='家长' }}">
+      <view wx:if="{{ type=='家长' }}" class="isRecieveBox">
+        <checkbox-group bindchange="checkboxChange">
+          <label class="checkbox">
+            <checkbox value="1" checked="{{isReciewInfo}}"/>是否接收孩子到校和离校的微信通知
+          </label>
+        </checkbox-group>
+      </view>
+      <!-- <view wx:if="{{ type=='家长' }}">
         <view class='title'>孩子信息</view>
         <view class='item' wx:for="{{list}}" wx:key="{{index}}">
           <view class='line'>
@@ -35,7 +44,7 @@
             <label class="left">班主任：{{item.TeacherName}}</label><label class='right'>家长：{{item.PUPName}}</label>
           </view>
         </view>
-      </view>
+      </view> -->
       
     </form >
     <button class='btn wings_blank mb-140' type="primary" size='default' bindtap='switch_account_btn'>切换身份</button>
@@ -48,7 +57,7 @@
       <view class="title">切换身份</view>
       <view class="content">
         <view style="margin-bottom:30rpx;">
-        当前登录者是{{ type }}：{{ type=="教师"?userInfo.SName: type=="家长"? userInfo.PUPName:type=="管理员"?userInfo.Name:""}} 
+        当前登录者是{{ type }}：{{ form.name}} 
         </view>
         <picker range="{{Role_array}}" bindchange="bindRolePickerChange">
           <view class="picker">
@@ -73,7 +82,7 @@
     <view class="text">
       <view class="title">智能云校通欢迎您！</view>
       <view class="content">
-        <view>当前登录者是{{ type }}：{{ type=="教师"?userInfo.SName: type=="家长"? userInfo.PUPName:type=="管理员"?userInfo.Name:""}}  </view>
+        <view>当前登录者是{{ type }}：{{ form.name }}  </view>
         <!-- <view style="font-size:24rpx;margin-top:20rpx;">每天签到后第二天才能接收到孩子到校通知</view> -->
       </view>
     </view>

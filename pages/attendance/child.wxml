@@ -27,7 +27,7 @@
     </view>
   </view>
   <view class="title-footer" wx:if="{{count==0}}">
-    <text class="f-24 col-9 cont">数据加载完毕</text>
+    <text class="f-24 col-9 cont">您的孩子该天尚未在校签到</text>
   </view>
 </scroll-view>
 <!-- </view> -->

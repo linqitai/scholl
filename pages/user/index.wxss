@@ -106,3 +106,8 @@
 /* .fix,form,.btn_box,button{
   pointer-events: auto;
 } */
+
+.isRecieveBox{
+  padding-left: 11px;
+  margin-top: 10px;
+}

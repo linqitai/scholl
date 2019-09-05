@@ -56,7 +56,7 @@ Page({
       active: 0,
       tab_bar: App.getTab_bar(App.globalData.tab_bar_type),
       type: App.globalData.tab_bar_type,
-      ClassName: App.globalData.userInfo.SDDetailName
+      ClassName: App.globalData.userInfo.SDetailName
     })
     console.log("history")
     console.log('type', _this.data.type)
@@ -65,7 +65,7 @@ Page({
 
     if (App.globalData.tab_bar_type=="教师"){
       _this.getStudentListByClassName()
-    }else{
+    } else if (App.globalData.tab_bar_type == "家长"){
       _this.getChildListByDateAndSActualNo()
     }
     
@@ -129,7 +129,7 @@ Page({
     let _this = this;
     let url = "api/XXYXT/getStudentListByClassName";
     let prams = {
-      ClassName: App.globalData.userInfo.SDDetailName
+      ClassName: App.globalData.userInfo.SDetailName
     }
     App._post_form(url, prams, function (res) {
       let result = JSON.parse(res)
@@ -152,13 +152,15 @@ Page({
     let _this = this;
     let url = "api/XXYXT/getAccessListByDateAndClassName";
     let prams = {
-      ClassName: App.globalData.userInfo.SDDetailName,
+      ClassName: App.globalData.userInfo.SDetailName,
       CreateDate: _this.data.form.StartDate,
       ReadHeadNote:"进门"
     }
+    console.log('prams', prams)
     App._post_form(url, prams, function (res) {
+      console.log("getAccessListByDateAndClassName", res)
       let result = JSON.parse(res)
-      console.log("result", result)
+      console.log("getAccessListByDateAndClassName", result)
       if (result.code == 1) {
         _this.setData({
           accessCount: result.count,
@@ -177,17 +179,23 @@ Page({
           })
         }else{
           for (let i = 0; i < _this.data.count; i++) {
+            dataList[i].EnterDoorDT = ""
+          }
+          console.log("dataList", dataList)
+          for (let i = 0; i < _this.data.count; i++) {
             for (let j = 0; j < _this.data.accessCount; j++) {
-              console.log('dataList[i].SActualNo', dataList[i].SActualNo)
-              console.log('accessList[j].SActualNo', accessList[j].SActualNo)
               if (dataList[i].SActualNo == accessList[j].SActualNo) {
                 dataList[i].EnterDoorDT = accessList[j].RecordDT
+                console.log("SName", dataList[i].SName)
+                console.log('dataList[i].SActualNo', dataList[i].SActualNo)
+                console.log('accessList[j].SActualNo', accessList[j].SActualNo)
                 _this.setData({
                   dataList: dataList
                 })
               }
             }
           }
+          console.log('dataList', dataList)
           let weidao=0;
           for (let i = 0; i < dataList.length;i++){
             if (dataList[i].EnterDoorDT == ""){

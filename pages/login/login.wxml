@@ -1,26 +1,26 @@
+
 <!-- <view> -->
 <view class="container">
   <view class="wechatapp">
-    <!-- <image class="header" src="/images/wechatapp.png"></image> -->
     <view class="header">
       <open-data class="" type="userAvatarUrl"></open-data>
     </view>
   </view>
-  <view class="welcome">欢迎使用校园通</view>
-  <!-- <view class="auth-subtitle">获得你的公开信息（昵称、头像等）</view> -->
-    <view class='title mt-40'>请先绑定身份</view>
-    <picker range="{{Role_array}}" bindchange="bindRolePickerChange">
-      <view class="picker">
-        <view class='label_style'>选择身份</view><text class='text'>{{Role_array[Role_index]}}</text>
-      </view>
-    </picker>
-    <form bindsubmit="saveFormId" report-submit="{{true}}" class='form_class'>
-      <button formType="submit" class='form_button'>
-        <van-field label="登记手机号" maxlength="{{maxlengthPhone}}" placeholder="您的手机号" clearable border="{{ false }}" bindinput="getPhoneInput"/>
-      </button>
-    </form>
-    
-    <view class='flag'>{{ flag }}</view>
+  <view class="welcome">欢迎使用云校通</view>
+  <!-- <view class="auth-subtitle">获得你的公开信息（昵称、头像等）</view>  -->
+  <view class='title mt-40'>请先绑定身份</view>
+  <picker range="{{Role_array}}" bindchange="bindRolePickerChange">
+    <view class="picker">
+      <view class='label_style'>选择身份</view>
+      <text class='text'>{{Role_array[Role_index]}}</text>
+    </view>
+  </picker>
+  <form bindsubmit="saveFormId" report-submit="{{true}}" class='form_class'>
+    <button formType="submit" class='form_button'>
+      <van-field label="登记手机号" maxlength="{{maxlengthPhone}}" placeholder="您的手机号" clearable border="{{ false }}" bindinput="getPhoneInput"/>
+    </button>
+  </form>
+  <view class='flag'>{{ flag }}</view>
   <button class="login-btn mt-40" openType="getUserInfo" lang="zh_CN" bindgetuserinfo="authorLogin">确认绑定</button>
+
 </view>
-<!-- </view> -->
