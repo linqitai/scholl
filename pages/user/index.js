@@ -27,7 +27,9 @@ Page({
     Phone:"",
     Role:"",
     flag: "务必填写与孩子身份绑定的家长手机号",
-    studentName:""
+    studentName:"",
+    isReciewInfo:false,
+    isReciewInfoValue: '0'
   },
   
   /**
@@ -46,6 +48,36 @@ Page({
     if (!App.globalData.openid){
       _this.deletePastTimeForm_id();
     }
+  },
+  checkboxChange: function (e) {
+    let _this = this
+    console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+    let result = e.detail.value
+    if(result&&result[0]==1){
+      _this.setData({
+        isReciewInfoValue: '1'
+      })
+    }else{
+      _this.setData({
+        isReciewInfoValue: '0'
+      })
+    }
+    console.log('isReciewInfoValue', _this.data.isReciewInfoValue)
+    //这里请求接口
+    let prams = {
+      SActualNo: App.globalData.userInfo.SActualNo,
+      IsRecived: _this.data.isReciewInfoValue
+    }
+    console.log("prams", prams)
+    App._post_form('api/XXYXT/isRecieveInfo', prams, function (res) {
+      console.log("res", res)
+      let result = JSON.parse(res);
+      if (result.code == 1) {
+        App.showToast(result.msg)
+      } else if (result.code == 0){
+        App.showToast(result.msg)
+      }
+    })
   },
   getPhoneInput(e) {
     console.log("e", e.detail)
@@ -214,7 +246,10 @@ Page({
                     userInfo: result.data[0],
                     list: result.data,
                     active: 1,
-                    tab_bar: App.getTab_bar(result.msg)
+                    tab_bar: App.getTab_bar(result.msg),
+                    showPop: true,
+                    isReciewInfo: result.data[0].IsRecived==0?false:true,
+                    isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
                   })
                   // App.globalData.childList = result.data;
                   App.globalData.userInfo = result.data[0];

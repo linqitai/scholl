@@ -25,7 +25,15 @@
           <van-field label="所带班级" value="{{ form.className }}" placeholder="--" disabled border="{{ false }}"/>
         </view>
         <van-field wx:if="{{ form.address }}" name="SDDetailName" label="家庭住址" value="{{ form.address }}" placeholder="--" autosize disabled border="{{ false }}"/>
+        
       </van-cell-group>
+      <view wx:if="{{ type=='家长' }}" class="isRecieveBox">
+        <checkbox-group bindchange="checkboxChange">
+          <label class="checkbox">
+            <checkbox value="1" checked="{{isReciewInfo}}"/>是否接收孩子到校和离校的微信通知
+          </label>
+        </checkbox-group>
+      </view>
       <!-- <view wx:if="{{ type=='家长' }}">
         <view class='title'>孩子信息</view>
         <view class='item' wx:for="{{list}}" wx:key="{{index}}">

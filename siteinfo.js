@@ -1,7 +1,7 @@
 module.exports = {
-  name: "访客系统",
-  siteroot: "http://26nx459745.zicp.vip:47896/",
-  // siteroot:"http://192.168.1.140:8083/",
+  name: "校园考勤查询",
+  // siteroot: "http://260v8q4212.wicp.vip:29504/",
+  siteroot:"http://26nx459745.zicp.vip:47896/",
   // siteroot:"http://localhost:14262/",
   // siteroot:"http://qfui66.natappfree.cc/",
   // siteroot:"http://120.78.78.144:8004/",
