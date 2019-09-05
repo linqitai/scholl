@@ -26,7 +26,8 @@ Page({
     maxlengthPhone: 11,
     Phone:"",
     Role:"",
-    flag: "务必填写与孩子身份绑定的家长手机号"
+    flag: "务必填写与孩子身份绑定的家长手机号",
+    studentName:""
   },
   
   /**
@@ -37,11 +38,14 @@ Page({
     let subDate = App.getDate(new Date().getTime() - 24 * 60 * 60 * 1000 * 6)
     _this.setData({
       SubDate: subDate,
-      Role_array: App.globalData.Role_array
+      Role_array: App.globalData.Role_array,
+      studentName:options.studentName||""
     })
     _this.get_access_token();
     _this.login();
-    _this.deletePastTimeForm_id();
+    if (!App.globalData.openid){
+      _this.deletePastTimeForm_id();
+    }
   },
   getPhoneInput(e) {
     console.log("e", e.detail)
@@ -183,6 +187,9 @@ Page({
             // header: {}, // 设置请求的 header  
             success: function (res) {
               console.log('res', res)
+              _this.setData({
+                showPop: App.globalData.openid ? false : true
+              })
               App.globalData.openid = res.data.openid;
               wx.setStorageSync('openid', res.data.openid)
               console.log('App.globalData.openid', App.globalData.openid)
@@ -207,8 +214,7 @@ Page({
                     userInfo: result.data[0],
                     list: result.data,
                     active: 1,
-                    tab_bar: App.getTab_bar(result.msg),
-                    showPop: true
+                    tab_bar: App.getTab_bar(result.msg)
                   })
                   // App.globalData.childList = result.data;
                   App.globalData.userInfo = result.data[0];
