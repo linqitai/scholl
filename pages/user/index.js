@@ -121,22 +121,26 @@ Page({
     let _this = this;
 
     if (App.globalData.access_token == "") {
-      let d = {
+      let prams = {
         appid: App.globalData.appid,
-        secret: App.globalData.secret,
-        grant_type: "client_credential"
+        secret: App.globalData.secret
       }
-      let url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + d.appid + "&secret=" + d.secret;
-      wx.request({
-        url: url,
-        data: {},
-        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
-        // header: {}, // 设置请求的 header  
-        success: function (res) {
-          console.log('res', res)
-          App.globalData.access_token = res.data.access_token;
-        }
-      });
+      App._post_form('api/XXYXT/getAccess_token', prams, function (res) {
+        // let result = JSON.parse(res);
+        console.log('res', res)
+        App.globalData.access_token = res;
+      })
+      // let url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + d.appid + "&secret=" + d.secret;
+      // wx.request({
+      //   url: url,
+      //   data: {},
+      //   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
+      //   // header: {}, // 设置请求的 header  
+      //   success: function (res) {
+      //     console.log('res', res)
+      //     App.globalData.access_token = res.data.access_token;
+      //   }
+      // });
     }
   },
 
@@ -211,94 +215,175 @@ Page({
             js_code: res.code,
             grant_type: "authorization_code"
           }
-          let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + res.code + '&grant_type=authorization_code';
-          wx.request({
-            url: url,
-            data: {},
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
-            // header: {}, // 设置请求的 header  
-            success: function (res) {
-              console.log('res', res)
-              _this.setData({
-                showPop: App.globalData.openid ? false : true
-              })
-              App.globalData.openid = res.data.openid;
-              wx.setStorageSync('openid', res.data.openid)
-              console.log('App.globalData.openid', App.globalData.openid)
-              let prams = {
-                OpenId: App.globalData.openid,
-                Role: _this.data.Role||""
-              }
-              console.log("====into haveUserInfo prams====", prams)
-              App._post_form('api/XXYXT/haveUserInfo', prams, function (res) {
-                let result = JSON.parse(res);
-                console.log('haveUserInfo', result)
-                if (result.code == 0) {
-                  wx.navigateTo({
-                    url: '../login/login',
-                  })
-                } else if (result.code == 1) {
-                  console.log("data", result.data[0])
-                  App.globalData.tab_bar_type = result.msg
-                  _this.setData({
-                    type: result.msg,
-                    Role:result.msg,
-                    userInfo: result.data[0],
-                    list: result.data,
-                    active: 1,
-                    tab_bar: App.getTab_bar(result.msg),
-                    showPop: true,
-                    isReciewInfo: result.data[0].IsRecived==0?false:true,
-                    isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
-                  })
-                  // App.globalData.childList = result.data;
-                  App.globalData.userInfo = result.data[0];
-                  console.log('App.globalData.userInfo', App.globalData.userInfo)
-                  let phone = _this.data.userInfo.SurrogateMPhone;
-                  if (App.globalData.tab_bar_type == "家长") {
-                    _this.setData({
-                      'form.name': _this.data.userInfo.SurrogateName,
-                      'form.relation': _this.data.userInfo.Relation,
-                      'form.sex': "",
-                      'form.phone': phone,
-                      'form.address': "",
-                      isShow: true
-                    })
-                    //获取孩子列表 getMyChildBySurrogateMPhone
-                    _this.getMyChildBySurrogateMPhone(phone)
-                  } else if (App.globalData.tab_bar_type == '教师') {
-                    let name = "";
-                    let phone = "";
-                    if (result.tearch==1){
-                      name = _this.data.userInfo.STeacher1;
-                      phone = _this.data.userInfo.SMPhone1;
-                    } else if (result.tearch == 2){
-                      name = _this.data.userInfo.STeacher2;
-                      phone = _this.data.userInfo.SMPhone2;
-                    }
-                    _this.setData({
-                      'form.name': name,
-                      'form.sex': "",
-                      'form.phone': phone,
-                      'form.address': "",
-                      'form.className': _this.data.userInfo.SDetailName,
-                      isShow: true
-                    })
-                  } else if (App.globalData.tab_bar_type == '管理员') {
-                    console.log("_this.data.userInfo",_this.data.userInfo)
-                    _this.setData({
-                      'form.name': _this.data.userInfo.OName,
-                      'form.sex': _this.data.userInfo.OSex,
-                      'form.phone': _this.data.userInfo.OPhone,
-                      'form.address': "",
-                      'form.className': "",
-                      isShow: true
-                    })
-                  }
-                }
-              })
+          App._post_form('api/XXYXT/getOpenId', d, function (res) {
+            // let result = JSON.parse(res);
+            console.log('res', res)
+            _this.setData({
+              showPop: App.globalData.openid ? false : true
+            })
+            App.globalData.openid = res;
+            wx.setStorageSync('openid', res)
+            console.log('App.globalData.openid', App.globalData.openid)
+            let prams = {
+              OpenId: App.globalData.openid,
+              Role: _this.data.Role || ""
             }
-          });
+            console.log("====into haveUserInfo prams====", prams)
+            App._post_form('api/XXYXT/haveUserInfo', prams, function (res) {
+              let result = JSON.parse(res);
+              console.log('haveUserInfo', result)
+              if (result.code == 0) {
+                wx.navigateTo({
+                  url: '../login/login',
+                })
+              } else if (result.code == 1) {
+                console.log("data", result.data[0])
+                App.globalData.tab_bar_type = result.msg
+                _this.setData({
+                  type: result.msg,
+                  Role: result.msg,
+                  userInfo: result.data[0],
+                  list: result.data,
+                  active: 1,
+                  tab_bar: App.getTab_bar(result.msg),
+                  isReciewInfo: result.data[0].IsRecived == 0 ? false : true,
+                  isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
+                })
+                // App.globalData.childList = result.data;
+                App.globalData.userInfo = result.data[0];
+                console.log('App.globalData.userInfo', App.globalData.userInfo)
+                let phone = _this.data.userInfo.SurrogateMPhone;
+                if (App.globalData.tab_bar_type == "家长") {
+                  _this.setData({
+                    'form.name': _this.data.userInfo.SurrogateName,
+                    'form.relation': _this.data.userInfo.Relation,
+                    'form.sex': "",
+                    'form.phone': phone,
+                    'form.address': "",
+                    isShow: true
+                  })
+                  //获取孩子列表 getMyChildBySurrogateMPhone
+                  _this.getMyChildBySurrogateMPhone(phone)
+                } else if (App.globalData.tab_bar_type == '教师') {
+                  let name = "";
+                  let phone = "";
+                  if (result.tearch == 1) {
+                    name = _this.data.userInfo.STeacher1;
+                    phone = _this.data.userInfo.SMPhone1;
+                  } else if (result.tearch == 2) {
+                    name = _this.data.userInfo.STeacher2;
+                    phone = _this.data.userInfo.SMPhone2;
+                  }
+                  _this.setData({
+                    'form.name': name,
+                    'form.sex': "",
+                    'form.phone': phone,
+                    'form.address': "",
+                    'form.className': _this.data.userInfo.SDetailName,
+                    isShow: true
+                  })
+                } else if (App.globalData.tab_bar_type == '管理员') {
+                  console.log("_this.data.userInfo", _this.data.userInfo)
+                  _this.setData({
+                    'form.name': _this.data.userInfo.OName,
+                    'form.sex': _this.data.userInfo.OSex,
+                    'form.phone': _this.data.userInfo.OPhone,
+                    'form.address': "",
+                    'form.className': "",
+                    isShow: true
+                  })
+                }
+              }
+            })
+          })
+          // let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + d.js_code + '&grant_type=authorization_code';
+          // wx.request({
+          //   url: url,
+          //   data: {},
+          //   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
+          //   // header: {}, // 设置请求的 header  
+          //   success: function (res) {
+          //     console.log('res', res)
+          //     _this.setData({
+          //       showPop: App.globalData.openid ? false : true
+          //     })
+          //     App.globalData.openid = res.data.openid;
+          //     wx.setStorageSync('openid', res.data.openid)
+          //     console.log('App.globalData.openid', App.globalData.openid)
+          //     let prams = {
+          //       OpenId: App.globalData.openid,
+          //       Role: _this.data.Role||""
+          //     }
+          //     console.log("====into haveUserInfo prams====", prams)
+          //     App._post_form('api/XXYXT/haveUserInfo', prams, function (res) {
+          //       let result = JSON.parse(res);
+          //       console.log('haveUserInfo', result)
+          //       if (result.code == 0) {
+          //         wx.navigateTo({
+          //           url: '../login/login',
+          //         })
+          //       } else if (result.code == 1) {
+          //         console.log("data", result.data[0])
+          //         App.globalData.tab_bar_type = result.msg
+          //         _this.setData({
+          //           type: result.msg,
+          //           Role:result.msg,
+          //           userInfo: result.data[0],
+          //           list: result.data,
+          //           active: 1,
+          //           tab_bar: App.getTab_bar(result.msg),
+          //           showPop: true,
+          //           isReciewInfo: result.data[0].IsRecived==0?false:true,
+          //           isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
+          //         })
+          //         // App.globalData.childList = result.data;
+          //         App.globalData.userInfo = result.data[0];
+          //         console.log('App.globalData.userInfo', App.globalData.userInfo)
+          //         let phone = _this.data.userInfo.SurrogateMPhone;
+          //         if (App.globalData.tab_bar_type == "家长") {
+          //           _this.setData({
+          //             'form.name': _this.data.userInfo.SurrogateName,
+          //             'form.relation': _this.data.userInfo.Relation,
+          //             'form.sex': "",
+          //             'form.phone': phone,
+          //             'form.address': "",
+          //             isShow: true
+          //           })
+          //           //获取孩子列表 getMyChildBySurrogateMPhone
+          //           _this.getMyChildBySurrogateMPhone(phone)
+          //         } else if (App.globalData.tab_bar_type == '教师') {
+          //           let name = "";
+          //           let phone = "";
+          //           if (result.tearch==1){
+          //             name = _this.data.userInfo.STeacher1;
+          //             phone = _this.data.userInfo.SMPhone1;
+          //           } else if (result.tearch == 2){
+          //             name = _this.data.userInfo.STeacher2;
+          //             phone = _this.data.userInfo.SMPhone2;
+          //           }
+          //           _this.setData({
+          //             'form.name': name,
+          //             'form.sex': "",
+          //             'form.phone': phone,
+          //             'form.address': "",
+          //             'form.className': _this.data.userInfo.SDetailName,
+          //             isShow: true
+          //           })
+          //         } else if (App.globalData.tab_bar_type == '管理员') {
+          //           console.log("_this.data.userInfo",_this.data.userInfo)
+          //           _this.setData({
+          //             'form.name': _this.data.userInfo.OName,
+          //             'form.sex': _this.data.userInfo.OSex,
+          //             'form.phone': _this.data.userInfo.OPhone,
+          //             'form.address': "",
+          //             'form.className': "",
+          //             isShow: true
+          //           })
+          //         }
+          //       }
+          //     })
+          //   }
+          // });
         } else {
           console.log('获取用户登录态失败！' + res.errMsg)
         }
@@ -400,39 +485,6 @@ Page({
         console.log('getForm_result', res)
       })
     }
-  },
-  sendMassage(){
-    let _this = this;
-    App.globalData.formId = "4147b857df614598bf02461352e397fa";
-    let _access_token = App.globalData.access_token;
-    let url = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + _access_token;
-    let _jsonData = {
-      access_token: _access_token,
-      touser: App.globalData.openid,
-      template_id: 'prRoMpM93vYcp06nwoEgHcT3gcfIa9KElWKuT5hguiM',//来访申请提醒模板
-      form_id: App.globalData.formId,
-      page: "pages/attendance/childDetail",
-      data: {
-        "keyword1": { "value": "1", "color": "#173177" },
-        "keyword2": { "value": "2", "color": "#173177" },
-        "keyword3": { "value": "3", "color": "#173177" }
-      }
-    }
-    console.log('_jsonData', _jsonData)
-    wx.request({
-      url: url,
-      data: _jsonData,
-      method: 'POST',
-      success: function (res) {
-        console.log('消息发送成功', res)
-      },
-      fail: function (err) {
-        console.log('request fail ', err);
-      },
-      complete: function (res) {
-        console.log("request completed!", res);
-      }
-    })
   },
   onClose() {
     this.setData({ showPop: false });
