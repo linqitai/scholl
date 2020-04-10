@@ -34,6 +34,9 @@
           </label>
         </checkbox-group>
       </view>
+      <view class="isRecieveBox">
+        <view>目前剩余接收微信通知次数 {{reciewCount}}次</view>
+      </view>
       <!-- <view wx:if="{{ type=='家长' }}">
         <view class='title'>孩子信息</view>
         <view class='item' wx:for="{{list}}" wx:key="{{index}}">
@@ -47,7 +50,12 @@
       </view> -->
       
     </form >
-    <button class='btn wings_blank mb-140' type="primary" size='default' bindtap='switch_account_btn'>切换身份</button>
+    <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" type="primary" class='btn wings_blank mb-140'>
+              添加次数
+        </button>
+      </form>
+    <button class='btn wings_blank mb-90' size='default' bindtap='switch_account_btn'>切换身份</button>
     <!-- <button class='btn wings_blank bg_white' type="primary" size='default' bindtap='logout'> 退 出 </button> -->
   </view>
 </scroll-view>

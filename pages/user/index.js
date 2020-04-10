@@ -29,7 +29,8 @@ Page({
     flag: "务必填写与孩子身份绑定的家长手机号",
     studentName:"",
     isReciewInfo:false,
-    isReciewInfoValue: '0'
+    isReciewInfoValue: '0',
+    reciewCount:0
   },
   
   /**
@@ -66,7 +67,7 @@ Page({
     //这里请求接口
     let prams = {
       SActualNo: App.globalData.userInfo.SActualNo,
-      IsRecived: _this.data.isReciewInfoValue
+      IsRecived: _this.data.isReciewInfoValue||'0'
     }
     console.log("prams", prams)
     App._post_form('api/XXYXT/isRecieveInfo', prams, function (res) {
@@ -179,6 +180,8 @@ Page({
         p.Phone = _this.data.Phone;
         p.Role = _this.data.Role;
         console.log('p', p)
+        //这里应当先判断当前手机号的身份是否存在
+        //......
         let prams2 = {
           OpenId: App.globalData.openid,
           Role: App.globalData.tab_bar_type
@@ -199,6 +202,21 @@ Page({
         })
       }
     });
+  },
+  getForm_idCount(){
+    let _this = this;
+    let prams2 = {
+      OpenId: App.globalData.openid
+    }
+    App._post_form('api/XXYXT/getForm_idByOpenId', prams2, function (res) {
+      let result = JSON.parse(res);
+      console.log('form_id_list', result)
+      if (result.code == 1) {
+        _this.setData({
+          reciewCount: result.count
+        })
+      }
+    })
   },
   login(){
     let _this = this;
@@ -224,6 +242,7 @@ Page({
             App.globalData.openid = res;
             wx.setStorageSync('openid', res)
             console.log('App.globalData.openid', App.globalData.openid)
+            _this.getForm_idCount();
             let prams = {
               OpenId: App.globalData.openid,
               Role: _this.data.Role || ""
@@ -242,21 +261,30 @@ Page({
                 _this.setData({
                   type: result.msg,
                   Role: result.msg,
-                  userInfo: result.data[0],
+                  userInfo: result.data?result.data[0]:{},
                   list: result.data,
                   active: 1,
                   tab_bar: App.getTab_bar(result.msg),
-                  isReciewInfo: result.data[0].IsRecived == 0 ? false : true,
-                  isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
                 })
+                if (result.data[0]){
+                  _this.setData({
+                    isReciewInfo: result.data[0].IsRecived == 0 ? false : true,
+                    isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
+                  })
+                }else{
+                  _this.setData({
+                    isReciewInfo: false,
+                    isReciewInfoValue: '0'
+                  })
+                }
                 // App.globalData.childList = result.data;
                 App.globalData.userInfo = result.data[0];
                 console.log('App.globalData.userInfo', App.globalData.userInfo)
-                let phone = _this.data.userInfo.SurrogateMPhone;
+                let phone = _this.data.userInfo?_this.data.userInfo.SurrogateMPhone : '';
                 if (App.globalData.tab_bar_type == "家长") {
                   _this.setData({
-                    'form.name': _this.data.userInfo.SurrogateName,
-                    'form.relation': _this.data.userInfo.Relation,
+                    'form.name': _this.data.userInfo ? _this.data.userInfo.SurrogateName:'测试',
+                    'form.relation': _this.data.userInfo ? _this.data.userInfo.Relation :'测试',
                     'form.sex': "",
                     'form.phone': phone,
                     'form.address': "",
@@ -296,94 +324,7 @@ Page({
               }
             })
           })
-          // let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + d.js_code + '&grant_type=authorization_code';
-          // wx.request({
-          //   url: url,
-          //   data: {},
-          //   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT  
-          //   // header: {}, // 设置请求的 header  
-          //   success: function (res) {
-          //     console.log('res', res)
-          //     _this.setData({
-          //       showPop: App.globalData.openid ? false : true
-          //     })
-          //     App.globalData.openid = res.data.openid;
-          //     wx.setStorageSync('openid', res.data.openid)
-          //     console.log('App.globalData.openid', App.globalData.openid)
-          //     let prams = {
-          //       OpenId: App.globalData.openid,
-          //       Role: _this.data.Role||""
-          //     }
-          //     console.log("====into haveUserInfo prams====", prams)
-          //     App._post_form('api/XXYXT/haveUserInfo', prams, function (res) {
-          //       let result = JSON.parse(res);
-          //       console.log('haveUserInfo', result)
-          //       if (result.code == 0) {
-          //         wx.navigateTo({
-          //           url: '../login/login',
-          //         })
-          //       } else if (result.code == 1) {
-          //         console.log("data", result.data[0])
-          //         App.globalData.tab_bar_type = result.msg
-          //         _this.setData({
-          //           type: result.msg,
-          //           Role:result.msg,
-          //           userInfo: result.data[0],
-          //           list: result.data,
-          //           active: 1,
-          //           tab_bar: App.getTab_bar(result.msg),
-          //           showPop: true,
-          //           isReciewInfo: result.data[0].IsRecived==0?false:true,
-          //           isReciewInfoValue: result.data[0].IsRecived == 0 ? '0' : '1'
-          //         })
-          //         // App.globalData.childList = result.data;
-          //         App.globalData.userInfo = result.data[0];
-          //         console.log('App.globalData.userInfo', App.globalData.userInfo)
-          //         let phone = _this.data.userInfo.SurrogateMPhone;
-          //         if (App.globalData.tab_bar_type == "家长") {
-          //           _this.setData({
-          //             'form.name': _this.data.userInfo.SurrogateName,
-          //             'form.relation': _this.data.userInfo.Relation,
-          //             'form.sex': "",
-          //             'form.phone': phone,
-          //             'form.address': "",
-          //             isShow: true
-          //           })
-          //           //获取孩子列表 getMyChildBySurrogateMPhone
-          //           _this.getMyChildBySurrogateMPhone(phone)
-          //         } else if (App.globalData.tab_bar_type == '教师') {
-          //           let name = "";
-          //           let phone = "";
-          //           if (result.tearch==1){
-          //             name = _this.data.userInfo.STeacher1;
-          //             phone = _this.data.userInfo.SMPhone1;
-          //           } else if (result.tearch == 2){
-          //             name = _this.data.userInfo.STeacher2;
-          //             phone = _this.data.userInfo.SMPhone2;
-          //           }
-          //           _this.setData({
-          //             'form.name': name,
-          //             'form.sex': "",
-          //             'form.phone': phone,
-          //             'form.address': "",
-          //             'form.className': _this.data.userInfo.SDetailName,
-          //             isShow: true
-          //           })
-          //         } else if (App.globalData.tab_bar_type == '管理员') {
-          //           console.log("_this.data.userInfo",_this.data.userInfo)
-          //           _this.setData({
-          //             'form.name': _this.data.userInfo.OName,
-          //             'form.sex': _this.data.userInfo.OSex,
-          //             'form.phone': _this.data.userInfo.OPhone,
-          //             'form.address': "",
-          //             'form.className': "",
-          //             isShow: true
-          //           })
-          //         }
-          //       }
-          //     })
-          //   }
-          // });
+          
         } else {
           console.log('获取用户登录态失败！' + res.errMsg)
         }
@@ -451,6 +392,7 @@ Page({
         console.log("intod getForm_id")
         //let result = JSON.parse(res);
         console.log('getForm_result', res)
+        _this.getForm_idCount();
       })
     }
 

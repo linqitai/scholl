@@ -36,6 +36,7 @@
 .mt-40{margin-top: 40rpx;}
 .mt-60{margin-top: 60rpx;}
 .mb-40{margin-bottom: 40rpx;}
+.mb-90{margin-bottom: 90rpx;}
 .mb-140{margin-bottom: 140rpx;}
 .pd_b100{
   padding-bottom: 100rpx;

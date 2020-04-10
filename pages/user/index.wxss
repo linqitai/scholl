@@ -41,7 +41,11 @@
   border-radius: 0;
   background: #228B22;
 }
- 
+.vvadd {
+  width: 100%;
+  background: #228B22;
+  color: white;
+} 
 .vv {
   width: 100%;
   background: #228B22;
